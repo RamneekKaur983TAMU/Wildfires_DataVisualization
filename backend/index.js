@@ -1,23 +1,23 @@
 const express = require('express');
 const cors = require('cors');
+const edaRoutes = require('./routes/edaRoutes');
 
 const app = express();
+const PORT = 8000;
 
-// Enable CORS
+// Middleware
 app.use(cors({
   origin: 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET'],
   credentials: true
 }));
 
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from backend!' });
-});
+// Mount EDA routes at /api
+app.use('/api', edaRoutes);
 
-const PORT = 8000;
-
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 }).on('error', (err) => {
