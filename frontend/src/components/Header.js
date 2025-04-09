@@ -22,7 +22,7 @@ const Header = ({ setPage }) => {
         backgroundColor: '#000',
         color: 'white'
       }}>
-        <img src={teamLogo} alt="Team Logo" style={{ height: '40px', objectFit: 'contain' }} />
+        <img src={teamLogo} alt="Team Logo" style={{ height: '80px', objectFit: 'contain' }} />
         <nav>
           {navItems.map((item, idx) => (
             <button
