@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Map from './Map'
 import Loader from './Loader'
-import Header from './Header'
+import Header from './header'
 
 function GoogleMap() {
   const [eventData, setEventData] = useState([])
