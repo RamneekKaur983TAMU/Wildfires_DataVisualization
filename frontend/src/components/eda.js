@@ -1,11 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './header';
 
 const EDA = ({ setPage }) => {
   const [filters, setFilters] = useState({ year: '', area: '' });
+  const [data, setData] = useState(null);
+
+  const fetchData = async () => {
+    const query = new URLSearchParams(filters).toString();
+    const res = await fetch(`http://localhost:4000/api/summary?${query}`);
+    const result = await res.json();
+    setData(result);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [filters]);
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const kpiKeys = {
+    'Total Incidents': 'totalIncidents',
+    'Total Cities': 'totalCities',
+    'Highest Fires Date': 'highestFireDate',
+    'Most Damaged Year': 'mostDamagedYear',
+    'Most Affected City': 'mostAffectedCity',
+    'Most Affected Street': 'mostAffectedStreet'
+  };
+
+  const formatNumber = (value, isPercentage = false) => {
+    const num = parseFloat(value);
+    if (isNaN(num)) return '--';
+    if (isPercentage) return num.toFixed(1) + '%';
+    if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+    if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+    return num.toString();
   };
 
   return (
@@ -44,7 +74,7 @@ const EDA = ({ setPage }) => {
           gap: '1rem',
           marginTop: '1rem'
         }}>
-          {['Total Incidents', 'Avg Damage %', 'Structures Destroyed', 'Most Affected Area', 'Most Active Year', 'Total Value Loss'].map((title, i) => (
+          {['Total Incidents', 'Total Cities', 'Highest Fires Date', 'Most Damaged Year', 'Most Affected City', 'Most Affected Street'].map((title, i) => (
             <div key={i} style={{
               backgroundColor: '#111',
               padding: '1rem',
@@ -53,7 +83,9 @@ const EDA = ({ setPage }) => {
               textAlign: 'center'
             }}>
               <p style={{ margin: 0, fontSize: '0.9rem', color: '#aaa' }}>{title}</p>
-              <h2 style={{ margin: 0, marginTop: '0.5rem', color: '#ff5722' }}>--</h2>
+              <h2 style={{ margin: 0, marginTop: '0.5rem', color: '#ff5722' }}>
+                {data ? formatNumber(data[kpiKeys[title]]) : '--'}
+              </h2>
             </div>
           ))}
         </div>
