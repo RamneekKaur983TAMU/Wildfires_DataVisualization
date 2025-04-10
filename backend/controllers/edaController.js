@@ -108,6 +108,57 @@ exports.getDamageByCounty = (req, res) => {
 };
 
 
+exports.getDamageTrend = (req, res) => {
+  const results = [];
+ 
+ 
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => results.push(row))
+    .on('end', () => {
+      const trend = {};
+ 
+ 
+      results.forEach(row => {
+        const dateRaw = row['Incident Start Date'];
+ 
+ 
+        if (!dateRaw) return;
+ 
+ 
+        const date = new Date(dateRaw.trim());
+        if (isNaN(date)) return;
+ 
+ 
+        const year = date.getFullYear();
+ 
+ 
+        if (!trend[year]) {
+          trend[year] = { fireCount: 0 };
+        }
+ 
+ 
+        trend[year].fireCount += 1;
+      });
+ 
+ 
+      const response = Object.entries(trend)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([year, { fireCount }]) => ({
+          year,
+          fireCount,
+        }));
+ 
+ 
+      res.json(response);
+    })
+    .on('error', (err) => {
+      console.error('CSV parse error:', err);
+      res.status(500).json({ error: 'Failed to process data file.' });
+    });
+ };
+ 
+
 exports.getFireMapData = (req, res) => {
     const results = [];
     const fs = require('fs');
@@ -144,6 +195,67 @@ exports.getFireMapData = (req, res) => {
         }));
   
         res.json(data);
+    });
+};
+  
+
+// Controller for structure type vs damage and number of incidents
+exports.getStructureTypeDamageSummary = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (data) => results.push(data))
+    .on('end', () => {
+      const structureDamageData = {};
+
+      results.forEach(row => {
+        const structureType = row['Structure Category']?.trim(); // Ensure this is the right column name
+        const damage = damageMap[row['Damage']] ?? 0;
+
+        if (!structureType) return;
+
+        if (!structureDamageData[structureType]) {
+          structureDamageData[structureType] = { totalDamage: 0, incidentCount: 0 };
+        }
+
+        structureDamageData[structureType].totalDamage += damage;
+        structureDamageData[structureType].incidentCount += 1;
+      });
+
+      const response = Object.entries(structureDamageData).map(([structureType, { totalDamage, incidentCount }]) => ({
+        structureType,
+        averageDamage: parseFloat((totalDamage / incidentCount).toFixed(2)), // Average damage
+        totalIncidents: incidentCount,
+      }));
+
+      res.json(response);
+    });
+};
+
+
+exports.getIncidentsByCounty = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => results.push(row))
+    .on('end', () => {
+      const countyIncidents = {};
+
+      results.forEach(row => {
+        const county = row['County']?.trim();
+        if (!county) return;
+        countyIncidents[county] = (countyIncidents[county] || 0) + 1;
+      });
+
+      // Convert the object into an array of { county, incidentCount } objects.
+      const response = Object.entries(countyIncidents).map(([county, count]) => ({
+        county,
+        incidentCount: count
+      }));
+
+      res.json(response);
     });
 };
 
