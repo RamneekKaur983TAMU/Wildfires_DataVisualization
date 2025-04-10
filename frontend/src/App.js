@@ -3,7 +3,7 @@ import './App.css';
 import EDA from './components/EDA/EDA.js';
 import Predictions from './components/predictions';
 import Decision from './components/decision';
-import Header from './components/header';
+import Header from './components/Header.js';
 import Home from './components/home';
 import About from './components/about';
 

@@ -106,3 +106,55 @@ exports.getDamageByCounty = (req, res) => {
       res.json(response);
     });
 };
+
+
+exports.getDamageTrend = (req, res) => {
+  const results = [];
+ 
+ 
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => results.push(row))
+    .on('end', () => {
+      const trend = {};
+ 
+ 
+      results.forEach(row => {
+        const dateRaw = row['Incident Start Date'];
+ 
+ 
+        if (!dateRaw) return;
+ 
+ 
+        const date = new Date(dateRaw.trim());
+        if (isNaN(date)) return;
+ 
+ 
+        const year = date.getFullYear();
+ 
+ 
+        if (!trend[year]) {
+          trend[year] = { fireCount: 0 };
+        }
+ 
+ 
+        trend[year].fireCount += 1;
+      });
+ 
+ 
+      const response = Object.entries(trend)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([year, { fireCount }]) => ({
+          year,
+          fireCount,
+        }));
+ 
+ 
+      res.json(response);
+    })
+    .on('error', (err) => {
+      console.error('CSV parse error:', err);
+      res.status(500).json({ error: 'Failed to process data file.' });
+    });
+ };
+ 
