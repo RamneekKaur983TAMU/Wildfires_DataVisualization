@@ -63,37 +63,41 @@ const EDA = ({ setPage }) => {
         <FilterSidebar filters={filters} onChange={setFilters} />
         <div style={{ flex: 1 }}>
           <KpiGrid data={data} />
-          <div style={{ marginBottom: '2rem' }}></div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '2rem', alignItems: 'flex-start' }}>
-            <div style={{ flex: '2', minWidth: '500px' }}>
-              <CaliforniaFireMap />
-              <div style={{ marginBottom: '2rem' }}></div>
-            </div>
-            <div style={{ flex: '2', minWidth: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '5rem' }}>
-              <div style={{ height: '60px', marginBottom: '8rem' }}>
-                <IncidentsByCountyChart data={incidentsByCounty} />
-                <div style={{ marginBottom: '5rem' }}></div>
-              </div>
-              <div style={{ flex: '2', minWidth: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '5rem' }}>
-                <div style={{ height: '60px', marginBottom: '8rem' }}>
-                  <FiresOverTime data={fireData} />
-                </div>
-              </div>
-            </div>
-          </div>
-          <HeatMapMonthvsDay />
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', marginTop: '2rem' }}>
-            <div style={{ flex: 1 }}>
-              <DamageVsFireIncidents />
-            </div>
-            <div style={{ flex: 1 }}>
-              <StructureDamageChart />
-            </div>
-          </div>
+          {/* Top row: California map + incidents & fires */}
+<div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1.5fr', gap: '2rem', marginTop: '2rem' }}>
+  <div>
+    <CaliforniaFireMap />
+  </div>
+
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <IncidentsByCountyChart data={incidentsByCounty} />
+    <FiresOverTime data={fireData} />
+  </div>
+</div>
+
+{/* Full-width HeatMap */}
+<div style={{ marginTop: '2rem' }}>
+  <HeatMapMonthvsDay />
+</div>
+
+{/* Bottom row: two side-by-side charts */}
+<div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '2rem',
+    marginTop: '2rem',
+  }}
+>
+  <DamageVsFireIncidents />
+  <StructureDamageChart />
+</div>
+
         </div>
       </div>
     </div>
   );
+  
 };
 
 export default EDA;

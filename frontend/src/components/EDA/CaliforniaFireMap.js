@@ -55,6 +55,9 @@ const CaliforniaFireMap = () => {
         <MapContainer
           center={[37.5, -119.5]}
           zoom={6.5}
+          minZoom={6} // 👈 restrict zoom out
+          maxBounds={[[28, -128], [44, -110]]} // 👈 bounding box for California
+          maxBoundsViscosity={1.0} // 👈 prevent dragging outside
           style={{ height: '100%', width: '100%', backgroundColor: '#000' }}
           attributionControl={false}
         >
