@@ -65,7 +65,12 @@ exports.getSummary = (req, res) => {
           streetCount[street] = (streetCount[street] || 0) + 1;
         }
       });
-      const mostAffectedStreet = Object.entries(streetCount).sort((a, b) => b[1] - a[1])[0]?.[0] || '--';
+
+      const mostAffectedStreet = (
+        Object.entries(streetCount)
+          .filter(([street]) => street !== '0.0 Unknown')
+          .sort((a, b) => b[1] - a[1])[0]?.[0]
+      ) || '--';
 
       res.json({
         totalIncidents,
