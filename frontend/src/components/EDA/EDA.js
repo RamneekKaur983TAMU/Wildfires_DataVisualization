@@ -7,6 +7,8 @@ import CaliforniaFireMap from './CaliforniaFireMap';
 import FiresOverTime from './FiresOverTime';
 import StructuresImpactedbyYear from './StructuresImpactedbyYear';
 import LossValueDistribution from './LossValueDistribution';
+import HeatMapMonthvsDay from './HeatMapMonthvsDay';
+
 
 const EDA = ({ setPage }) => {
   const [filters, setFilters] = useState({ year: '', area: '' });
@@ -58,6 +60,7 @@ const EDA = ({ setPage }) => {
             <FiresOverTime data={fireData} />
             <StructuresImpactedbyYear />
             <LossValueDistribution />
+            <HeatMapMonthvsDay />
           </div>
         </div>
       </div>

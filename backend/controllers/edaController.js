@@ -158,3 +158,43 @@ exports.getDamageTrend = (req, res) => {
     });
  };
  
+
+exports.getFireMapData = (req, res) => {
+    const results = [];
+    const fs = require('fs');
+    const csv = require('csv-parser');
+    const path = require('path');
+    const filePath = path.join(__dirname, '..', 'datasets', 'TransformedData.csv');
+  
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', (row) => results.push(row))
+      .on('end', () => {
+        const countyData = {};
+  
+        results.forEach(row => {
+          const county = row['County']?.trim();
+          const lat = parseFloat(row['Latitude']);
+          const lon = parseFloat(row['Longitude']);
+          if (!county || isNaN(lat) || isNaN(lon)) return;
+  
+          if (!countyData[county]) {
+            countyData[county] = { count: 0, latSum: 0, lonSum: 0 };
+          }
+  
+          countyData[county].count++;
+          countyData[county].latSum += lat;
+          countyData[county].lonSum += lon;
+        });
+  
+        const data = Object.entries(countyData).map(([county, info]) => ({
+          county,
+          totalFires: info.count,
+          lat: info.latSum / info.count,
+          lon: info.lonSum / info.count
+        }));
+  
+        res.json(data);
+    });
+};
+  
