@@ -54,7 +54,7 @@ const CaliforniaFireMap = () => {
       <div style={{ height: '500px' }}>
         <MapContainer
           center={[37.5, -119.5]}
-          zoom={6}
+          zoom={6.5}
           style={{ height: '100%', width: '100%', backgroundColor: '#000' }}
           attributionControl={false}
         >

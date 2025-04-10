@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid , LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 const FiresOverTime = React.memo(({ data }) => {
   console.log("Received data: ", data); // Log data to check the format
@@ -13,13 +13,12 @@ const FiresOverTime = React.memo(({ data }) => {
       color: '#ffcc80'
     }}>
       <h4>Fires Over Time</h4>
-      <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem' }}>
+      <div style={{ height: '250px', backgroundColor: 'transparent', padding: '0.5rem' }}>
         {data.length === 0 ? (
           <p style={{ color: '#aaa' }}>Loading...</p>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#444" />
               <XAxis
                 dataKey="year"
                 angle={-85}

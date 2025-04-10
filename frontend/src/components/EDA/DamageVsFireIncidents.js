@@ -39,7 +39,7 @@ const DamageDistributionChart = () => {
               <XAxis dataKey="damage" tick={{ fill: '#ccc' }} interval={0} angle={-25} textAnchor="end" />
               <YAxis tick={{ fill: '#ccc' }} />
               <Tooltip contentStyle={{ backgroundColor: '#222', border: 'none', color: '#fff' }} />
-              <Bar dataKey="count" fill="#f94144" />
+              <Bar dataKey="count" fill="#ff5722" />
             </BarChart>
           </ResponsiveContainer>
         )}

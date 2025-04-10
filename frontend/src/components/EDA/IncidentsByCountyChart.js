@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const IncidentsByCountyChart = ({ data }) => {
   // Show a loading state if no data is available
@@ -63,10 +63,9 @@ const IncidentsByCountyChart = ({ data }) => {
       color: '#ffcc80'
     }}>
       <h4>Incidents by County</h4>
-      <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem' }}>
+      <div style={{ height: '250px', backgroundColor: 'transparent', padding: '0.5rem' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={top10Counties} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#444" />
             <XAxis
               dataKey="county"
               angle={-45}

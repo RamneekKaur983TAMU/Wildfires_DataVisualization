@@ -2,17 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Header from '../Header';
 import FilterSidebar from './FilterSidebar';
 import KpiGrid from './KpiGrid';
-import DamageByCountyChart from './DamageByCountyChart';
 import IncidentsByCountyChart from './IncidentsByCountyChart';
 import CaliforniaFireMap from './CaliforniaFireMap';
 import FiresOverTime from './FiresOverTime';
-import StructuresImpactedbyYear from './StructuresImpactedbyYear';
-import LossValueDistribution from './LossValueDistribution';
 import HeatMapMonthvsDay from './HeatMapMonthvsDay';
-import StructureDamageChart from './StructureTypevsDamage';
 import DamageVsFireIncidents from './DamageVsFireIncidents';
-
-
+import StructureDamageChart from './StructureTypevsDamage';
 
 const EDA = ({ setPage }) => {
   const [filters, setFilters] = useState({ year: '', area: '' });
@@ -68,16 +63,32 @@ const EDA = ({ setPage }) => {
         <FilterSidebar filters={filters} onChange={setFilters} />
         <div style={{ flex: 1 }}>
           <KpiGrid data={data} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginTop: '2rem' }}>
-            <CaliforniaFireMap />
-            <DamageByCountyChart data={damageByCounty} />
-            <IncidentsByCountyChart data={incidentsByCounty} />
-            <FiresOverTime data={fireData} />
-            <StructuresImpactedbyYear />
-            <LossValueDistribution />
-            <HeatMapMonthvsDay />
-            <DamageVsFireIncidents />
-            <StructureDamageChart/>
+          <div style={{ marginBottom: '2rem' }}></div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '2rem', alignItems: 'flex-start' }}>
+            <div style={{ flex: '2', minWidth: '500px' }}>
+              <CaliforniaFireMap />
+              <div style={{ marginBottom: '2rem' }}></div>
+            </div>
+            <div style={{ flex: '2', minWidth: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '5rem' }}>
+              <div style={{ height: '60px', marginBottom: '8rem' }}>
+                <IncidentsByCountyChart data={incidentsByCounty} />
+                <div style={{ marginBottom: '5rem' }}></div>
+              </div>
+              <div style={{ flex: '2', minWidth: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '5rem' }}>
+                <div style={{ height: '60px', marginBottom: '8rem' }}>
+                  <FiresOverTime data={fireData} />
+                </div>
+              </div>
+            </div>
+          </div>
+          <HeatMapMonthvsDay />
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', marginTop: '2rem' }}>
+            <div style={{ flex: 1 }}>
+              <DamageVsFireIncidents />
+            </div>
+            <div style={{ flex: 1 }}>
+              <StructureDamageChart />
+            </div>
           </div>
         </div>
       </div>
