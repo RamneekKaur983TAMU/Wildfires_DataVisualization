@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Header from './header';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 const EDA = ({ setPage }) => {
   const [filters, setFilters] = useState({ year: '', area: '' });
   const [data, setData] = useState(null);
+  const [damageByCounty, setDamageByCounty] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchKpis = async () => {
       try {
         const query = new URLSearchParams();
         if (filters.year) query.append('year', filters.year);
@@ -20,8 +22,22 @@ const EDA = ({ setPage }) => {
       }
     };
 
-    fetchData();
+    fetchKpis();
   }, [filters]);
+
+  useEffect(() => {
+    const fetchDamageChart = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/api/damage-by-county');
+        const chartData = await res.json();
+        setDamageByCounty(chartData);
+      } catch (error) {
+        console.error('Failed to fetch damage chart data', error);
+      }
+    };
+
+    fetchDamageChart();
+  }, []);
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -115,7 +131,44 @@ const EDA = ({ setPage }) => {
               <h4>California Fire Map</h4>
               <div style={{ height: '250px', backgroundColor: '#222' }}>[Map Placeholder]</div>
             </div>
-            {['Damage % by County', 'Fires Over Time', 'Structures Impacted by Year', 'Loss Value Distribution'].map((title, i) => (
+
+            {/* Damage % by County Bar Chart */}
+            <div style={{
+              flex: '1 1 400px',
+              minHeight: '300px',
+              backgroundColor: '#111',
+              borderRadius: '8px',
+              padding: '1rem',
+              color: '#ffcc80'
+            }}>
+              <h4>Damage % by County</h4>
+              <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem' }}>
+                {damageByCounty.length === 0 ? (
+                  <p style={{ color: '#aaa' }}>Loading...</p>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={damageByCounty
+                        .sort((a, b) => b.averageDamage - a.averageDamage)
+                        .slice(0, 15)}
+                      margin={{ top: 10, right: 20, left: 0, bottom: 40 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                      <XAxis dataKey="county" angle={-45} textAnchor="end" interval={0} tick={{ fill: '#ccc', fontSize: 12 }} />
+                      <YAxis
+                        tick={{ fill: '#ccc' }}
+                        domain={[0, Math.ceil(Math.max(...damageByCounty.map(c => c.averageDamage)))]}
+                      />
+                      <Tooltip contentStyle={{ backgroundColor: '#222', border: 'none', color: '#fff' }} />
+                      <Bar dataKey="averageDamage" fill="#ff5722" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
+            </div>
+
+            {/* Other chart placeholders */}
+            {['Fires Over Time', 'Structures Impacted by Year', 'Loss Value Distribution'].map((title, i) => (
               <div key={i} style={{
                 flex: '1 1 400px',
                 minHeight: '300px',
