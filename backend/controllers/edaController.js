@@ -1,4 +1,4 @@
-<file name=0 path=/Users/asmania/Desktop/SPRING 2025/DV/Wildfires_DataVisualization/backend/controllers/edaController.js>const fs = require('fs');
+const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path');
 
@@ -107,29 +107,43 @@ exports.getDamageByCounty = (req, res) => {
     });
 };
 
-exports.getHeatmapData = (req, res) => {
-  const results = [];
 
-  fs.createReadStream(filePath)
-    .pipe(csv())
-    .on('data', (row) => results.push(row))
-    .on('end', () => {
-      const heatmap = {};
-
-      results.forEach(row => {
-        const month = row['Start Month Name']?.trim();
-        const dayRaw = row['Start Day']?.trim();
-        const day = dayRaw ? parseInt(dayRaw, 10) : null;
-        const id = row['_id']?.trim();
-
-        if (month && day && id) {
-          const dayStr = String(day);
-          if (!heatmap[dayStr]) heatmap[dayStr] = {};
-          heatmap[dayStr][month] = (heatmap[dayStr][month] || 0) + 1;
-        }
-      });
-
-      res.json(heatmap);
+exports.getFireMapData = (req, res) => {
+    const results = [];
+    const fs = require('fs');
+    const csv = require('csv-parser');
+    const path = require('path');
+    const filePath = path.join(__dirname, '..', 'datasets', 'TransformedData.csv');
+  
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', (row) => results.push(row))
+      .on('end', () => {
+        const countyData = {};
+  
+        results.forEach(row => {
+          const county = row['County']?.trim();
+          const lat = parseFloat(row['Latitude']);
+          const lon = parseFloat(row['Longitude']);
+          if (!county || isNaN(lat) || isNaN(lon)) return;
+  
+          if (!countyData[county]) {
+            countyData[county] = { count: 0, latSum: 0, lonSum: 0 };
+          }
+  
+          countyData[county].count++;
+          countyData[county].latSum += lat;
+          countyData[county].lonSum += lon;
+        });
+  
+        const data = Object.entries(countyData).map(([county, info]) => ({
+          county,
+          totalFires: info.count,
+          lat: info.latSum / info.count,
+          lon: info.lonSum / info.count
+        }));
+  
+        res.json(data);
     });
 };
-</file>
+  

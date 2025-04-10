@@ -6,6 +6,7 @@ import Decision from './components/decision';
 import Header from './components/header';
 import Home from './components/home';
 import About from './components/about';
+import 'leaflet/dist/leaflet.css';
 
 function App() {
   const [page, setPage] = useState('home');
