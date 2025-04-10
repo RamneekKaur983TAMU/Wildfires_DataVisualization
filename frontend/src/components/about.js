@@ -3,10 +3,10 @@ import Header from './Header';
 
 const AboutUs = ({ setPage }) => {
   const teamMembers = [
-    { name: 'Alisha Raj' },
-    { name: 'Asmita Shivling Desai' },
-    { name: 'Ramneek Kaur' },
-    { name: 'Saksham Mehta' }
+    { name: 'Alisha Raj', imageUrl: '/images/alisha.jpeg' },
+    { name: 'Asmita Shivling Desai', imageUrl: '/images/asmita.jpeg' },
+    { name: 'Ramneek Kaur', imageUrl: '/images/ramneek.jpg' },
+    { name: 'Saksham Mehta', imageUrl: '/images/saksham.jpeg' }
   ];
 
   return (
@@ -43,7 +43,9 @@ const AboutUs = ({ setPage }) => {
                 width: '80px',
                 height: '80px',
                 borderRadius: '50%',
-                backgroundColor: '#333',
+                backgroundImage: `url(${member.imageUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
                 margin: '0 auto 10px'
               }} />
               <p style={{ margin: 0, fontWeight: 'bold', color: '#ffcc80' }}>{member.name}</p>
@@ -59,6 +61,31 @@ const AboutUs = ({ setPage }) => {
           Through interactive and data-driven visualizations, this system will support policymakers,
           emergency responders, and researchers in decision-making processes.
         </p>
+
+        <h4 style={{ marginTop: '3rem', fontSize: '20px' }}>We Value Your Feedback</h4>
+        <p style={{ fontSize: '16px', lineHeight: '1.6' }}>
+          We would love to hear your thoughts on this project and how we can improve. Please take a moment to fill out our feedback survey.
+        </p>
+        
+        <div style={{ textAlign: 'center' }}>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSduARsKZC8DOXMLMi8ffVa16p6f89Ks97iOWLmyyT95iHnZXQ/viewform?usp=header"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              backgroundColor: '#ff5722',
+              color: '#fff',
+              padding: '10px 20px',
+              textDecoration: 'none',
+              borderRadius: '5px',
+              fontSize: '16px',
+              marginTop: '1rem',
+              display: 'inline-block'
+            }}
+          >
+            Take the Survey
+          </a>
+        </div>
       </div>
     </div>
   );
