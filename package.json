@@ -1,0 +1,11 @@
+{
+    "name": "wildfires",
+    "scripts": {
+      "start": "node backend/index.js",
+      "heroku-postbuild": "cd frontend && npm install && npm run build"
+    },
+    "engines": {
+      "node": "18.x"
+    }
+  }
+  
