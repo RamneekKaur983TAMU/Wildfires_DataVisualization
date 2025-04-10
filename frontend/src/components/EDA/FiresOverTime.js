@@ -1,6 +1,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid , LineChart, Line } from 'recharts';
-const FiresOverTime = ({ data }) => {
+
+const FiresOverTime = React.memo(({ data }) => {
   console.log("Received data: ", data); // Log data to check the format
   return (
     <div style={{
@@ -25,26 +26,9 @@ const FiresOverTime = ({ data }) => {
                 textAnchor="end"
                 interval={0}
                 tick={{ fill: '#ccc', fontSize: 12 }}
-                label={{
-                  value: 'Year',
-                  position: 'insideBottom',
-                  offset: -10,
-                  fill: '#fff',
-                  fontSize: 14,
-                
-                }}
               />
               <YAxis
                 tick={{ fill: '#ccc' }}
-                label={{
-                  value: 'Number of Fires',
-                  angle: -90,
-                  position: 'insideLeft',
-                  offset: 10,
-                  fill: '#fff',
-                  fontSize: 14,
-                  marginLeft: 10
-                }}
               />
               <Tooltip contentStyle={{ backgroundColor: '#222', border: 'none', color: '#fff' }} />
               <Line
@@ -61,7 +45,9 @@ const FiresOverTime = ({ data }) => {
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Only re-render if data has actually changed
+  return prevProps.data === nextProps.data;
+});
 
 export default FiresOverTime;
-

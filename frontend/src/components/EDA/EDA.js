@@ -8,6 +8,7 @@ import FiresOverTime from './FiresOverTime';
 import StructuresImpactedbyYear from './StructuresImpactedbyYear';
 import LossValueDistribution from './LossValueDistribution';
 import HeatMapMonthvsDay from './HeatMapMonthvsDay';
+import StructureDamageChart from './StructureTypevsDamage';
 
 
 const EDA = ({ setPage }) => {
@@ -61,6 +62,7 @@ const EDA = ({ setPage }) => {
             <StructuresImpactedbyYear />
             <LossValueDistribution />
             <HeatMapMonthvsDay />
+            <StructureDamageChart/>
           </div>
         </div>
       </div>

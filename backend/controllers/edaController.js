@@ -198,3 +198,37 @@ exports.getFireMapData = (req, res) => {
     });
 };
   
+
+// Controller for structure type vs damage and number of incidents
+exports.getStructureTypeDamageSummary = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (data) => results.push(data))
+    .on('end', () => {
+      const structureDamageData = {};
+
+      results.forEach(row => {
+        const structureType = row['Structure Category']?.trim(); // Ensure this is the right column name
+        const damage = damageMap[row['Damage']] ?? 0;
+
+        if (!structureType) return;
+
+        if (!structureDamageData[structureType]) {
+          structureDamageData[structureType] = { totalDamage: 0, incidentCount: 0 };
+        }
+
+        structureDamageData[structureType].totalDamage += damage;
+        structureDamageData[structureType].incidentCount += 1;
+      });
+
+      const response = Object.entries(structureDamageData).map(([structureType, { totalDamage, incidentCount }]) => ({
+        structureType,
+        averageDamage: parseFloat((totalDamage / incidentCount).toFixed(2)), // Average damage
+        totalIncidents: incidentCount,
+      }));
+
+      res.json(response);
+    });
+};
