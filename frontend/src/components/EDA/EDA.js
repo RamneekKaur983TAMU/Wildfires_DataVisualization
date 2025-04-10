@@ -3,6 +3,7 @@ import Header from '../header';
 import FilterSidebar from './FilterSidebar';
 import KpiGrid from './KpiGrid';
 import DamageByCountyChart from './DamageByCountyChart';
+import IncidentsByCountyChart from './IncidentsByCountyChart';
 import CaliforniaFireMap from './CaliforniaFireMap';
 import FiresOverTime from './FiresOverTime';
 import StructuresImpactedbyYear from './StructuresImpactedbyYear';
@@ -12,6 +13,8 @@ const EDA = ({ setPage }) => {
   const [filters, setFilters] = useState({ year: '', area: '' });
   const [data, setData] = useState(null);
   const [damageByCounty, setDamageByCounty] = useState([]);
+  const [incidentsByCounty, setIncidentsByCounty] = useState([]);
+
 
   useEffect(() => {
     const fetchKpis = async () => {
@@ -30,6 +33,14 @@ const EDA = ({ setPage }) => {
       setDamageByCounty(result);
     };
     fetchChart();
+
+    const fetchIncidentsChart = async () => {
+      const res = await fetch('http://localhost:8000/api/incidents-by-county');
+      const result = await res.json();
+      setIncidentsByCounty(result);
+    };
+    fetchIncidentsChart();
+
   }, []);
 
   return (
@@ -41,6 +52,7 @@ const EDA = ({ setPage }) => {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginTop: '2rem' }}>
             <CaliforniaFireMap />
             <DamageByCountyChart data={damageByCounty} />
+            <IncidentsByCountyChart data={incidentsByCounty} />
             <FiresOverTime />
             <StructuresImpactedbyYear />
             <LossValueDistribution />
