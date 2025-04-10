@@ -3,8 +3,10 @@ import Header from '../header';
 import FilterSidebar from './FilterSidebar';
 import KpiGrid from './KpiGrid';
 import DamageByCountyChart from './DamageByCountyChart';
-import MapPlaceholder from './MapPlaceholder';
-import ChartPlaceholder from './ChartPlaceholder';
+import CaliforniaFireMap from './CaliforniaFireMap';
+import FiresOverTime from './FiresOverTime';
+import StructuresImpactedbyYear from './StructuresImpactedbyYear';
+import LossValueDistribution from './LossValueDistribution';
 
 const EDA = ({ setPage }) => {
   const [filters, setFilters] = useState({ year: '', area: '' });
@@ -37,11 +39,11 @@ const EDA = ({ setPage }) => {
         <div style={{ flex: 1 }}>
           <KpiGrid data={data} />
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginTop: '2rem' }}>
-            <MapPlaceholder />
+            <CaliforniaFireMap />
             <DamageByCountyChart data={damageByCounty} />
-            {['Fires Over Time', 'Structures Impacted by Year', 'Loss Value Distribution'].map((title, i) => (
-              <ChartPlaceholder key={i} title={title} />
-            ))}
+            <FiresOverTime />
+            <StructuresImpactedbyYear />
+            <LossValueDistribution />
           </div>
         </div>
       </div>

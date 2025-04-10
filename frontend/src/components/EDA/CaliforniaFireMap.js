@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MapPlaceholder = () => (
+const CaliforniaFireMap = () => (
   <div style={{
     flex: '1 1 400px',
     minHeight: '300px',
@@ -14,4 +14,4 @@ const MapPlaceholder = () => (
   </div>
 );
 
-export default MapPlaceholder;
+export default CaliforniaFireMap;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ChartPlaceholder = ({ title }) => (
+const FiresOverTime = () => (
   <div style={{
     flex: '1 1 400px',
     minHeight: '300px',
@@ -9,9 +9,9 @@ const ChartPlaceholder = ({ title }) => (
     padding: '1rem',
     color: '#ffcc80'
   }}>
-    <h4>{title}</h4>
-    <div style={{ height: '250px', backgroundColor: '#222' }}>[Chart Placeholder]</div>
+    <h4>Fires Over Time</h4>
+    <div style={{ height: '250px', backgroundColor: '#222' }}>[Map Placeholder]</div>
   </div>
 );
 
-export default ChartPlaceholder;
+export default FiresOverTime;
