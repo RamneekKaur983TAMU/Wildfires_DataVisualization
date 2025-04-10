@@ -146,4 +146,53 @@ exports.getFireMapData = (req, res) => {
         res.json(data);
     });
 };
-  
+
+exports.getDamageDistribution = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', row => results.push(row))
+    .on('end', () => {
+      const distribution = {};
+      results.forEach(row => {
+        const damage = row['Damage']?.trim();
+        const id = row['_id']?.trim();
+        if (id) {
+          distribution[damage] = (distribution[damage] || 0) + 1;
+        }
+      });
+
+      const chartData = Object.entries(distribution).map(([damage, count]) => ({
+        damage,
+        count
+      }));
+
+      res.json(chartData);
+    });
+};
+
+exports.getHeatmapData = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => results.push(row))
+    .on('end', () => {
+      const heatmap = {};
+
+      results.forEach(row => {
+        const month = row['Start Month Name']?.trim();
+        const day = row['Start Day']?.trim();
+        const id = row['_id']?.trim();
+
+        if (month && day && id) {
+          const dayStr = String(day);
+          if (!heatmap[dayStr]) heatmap[dayStr] = {};
+          heatmap[dayStr][month] = (heatmap[dayStr][month] || 0) + 1;
+        }
+      });
+
+      res.json(heatmap);
+    });
+};

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './HeatMapMonthvsDay.css';
 
 const days = Array.from({ length: 31 }, (_, i) => i + 1);
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -12,7 +11,7 @@ const HeatMapMonthvsDay = () => {
   const [heatmapData, setHeatmapData] = useState({});
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/heatmap-data')
+    fetch('http://localhost:8000/api/heatmap-data')
       .then(res => res.json())
       .then(setHeatmapData)
       .catch(console.error);
@@ -32,44 +31,62 @@ const HeatMapMonthvsDay = () => {
   ), 1);
 
   return (
-    <div className="heatmap-container">
-      <h2 className="heatmap-title">Wildfires By Month and Day</h2>
-      <div className="heatmap-grid">
-        <div className="heatmap-header-row">
-          <div className="heatmap-corner" />
-          {days.map(day => (
-            <div className="heatmap-header-cell" key={`day-${day}`}>{day}</div>
-          ))}
-        </div>
+    <div style={{
+      flex: '1 1 400px',
+      minHeight: '300px',
+      backgroundColor: '#111',
+      borderRadius: '8px',
+      padding: '1rem',
+      color: '#ffcc80'
+    }}>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Wildfires By Month and Day</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${days.length + 1}, 1fr)` }}>
+        {/* Top-left corner cell */}
+        <div style={{ fontWeight: 'bold' }}></div>
+        {/* Days Header Row */}
+        {days.map(day => (
+          <div key={`day-header-${day}`} style={{ fontWeight: 'bold', textAlign: 'center', padding: '0.25rem', color: '#ffcc80' }}>{day}</div>
+        ))}
+
+        {/* Month Rows */}
         {months.map(month => (
-          <div className="heatmap-row" key={month}>
-            <div className="heatmap-day-label">{month}</div>
+          <React.Fragment key={`row-${month}`}>
+            {/* Month label on left */}
+            <div style={{ fontWeight: 'bold', textAlign: 'right', padding: '0.25rem 0.5rem', color: '#ffcc80' }}>{month}</div>
+            {/* Data cells */}
             {days.map(day => {
               const normalizedHeatmap = heatmapData?.[String(day)] || {};
-              const count = Number(normalizedHeatmap?.[month]) || 0;
+              const monthFullName = Object.keys(monthMap).find(key => monthMap[key] === month);
+              const count = Number(normalizedHeatmap?.[monthFullName]) || 0;
               const color = getColor(count, maxCount);
               return (
                 <div
-                  className="heatmap-cell"
                   key={`${month}-${day}`}
-                  title={`Date: ${month} ${day}\nIncidents: ${count}`}
-                  style={{ backgroundColor: color, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  title={`Month: ${month}\nDay: ${day}\nIncidents: ${count}`}
+                  style={{
+                    backgroundColor: color,
+                    border: '1px solid #444',
+                    height: '30px',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '0.75rem',
+                    color: count > 100 ? '#fff' : '#222',
+                    fontWeight: 'bold'
+                  }}
                 >
-                  {count > 0 && (
-                    <span className="heatmap-cell-text" style={{ fontSize: '0.7rem', color: '#000', fontWeight: 'bold' }}>
-                      {count}
-                    </span>
-                  )}
+                  &nbsp;
                 </div>
               );
             })}
-          </div>
+          </React.Fragment>
         ))}
       </div>
-      <div className="heatmap-legend">
-        <span>Low</span>
-        <div className="heatmap-gradient" />
-        <span>High</span>
+      <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
+        <span style={{ color: '#fff' }}>Low</span>
+        <div style={{ flex: 1, height: '10px', background: 'linear-gradient(to right, #fefae0, #ffcc80, #ff5722, #b71c1c)', margin: '0 0.5rem' }} />
+        <span style={{ color: '#fff' }}>High</span>
       </div>
     </div>
   );
