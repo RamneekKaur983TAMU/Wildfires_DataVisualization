@@ -1,38 +1,42 @@
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { useMemo } from 'react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const IncidentsByCountyChart = ({ data }) => {
-  // Show a loading state if no data is available
-  if (!data || data.length === 0) {
-    return (
-      <div style={{
-        flex: '1 1 400px',
-        minHeight: '300px',
-        backgroundColor: '#111',
-        borderRadius: '8px',
-        padding: '1rem',
-        color: '#ffcc80'
-      }}>
-        <h4>Incidents by County</h4>
-        <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem' }}>
-          <p style={{ color: '#aaa' }}>Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  // Memoize to avoid recalculating on each render
+  const top10Counties = useMemo(() => {
+    return [...data]
+      .sort((a, b) => b.incidentCount - a.incidentCount)
+      .slice(0, 10);
+  }, [data]);
 
-  // Sort by incidentCount in descending order and take the top 10 counties.
-  const top10Counties = [...data]
-    .sort((a, b) => b.incidentCount - a.incidentCount)
-    .slice(0, 10);
+  // Calculate total incidents for percentage calculations (Memoize this too)
+  const totalIncidents = useMemo(() => {
+    return data.reduce((acc, curr) => acc + curr.incidentCount, 0);
+  }, [data]);
 
-  // Calculate the total number of incidents (from the overall data) for tooltip percentages.
-  const totalIncidents = data.reduce((acc, curr) => acc + curr.incidentCount, 0);
+  // Set maximum incident count for Y-axis (Memoized)
+  const maxIncidents = useMemo(() => {
+    return Math.ceil(Math.max(...top10Counties.map(item => item.incidentCount)));
+  }, [top10Counties]);
 
-  // Set the maximum count value for the Y-axis scale.
-  const maxIncidents = Math.ceil(Math.max(...top10Counties.map(item => item.incidentCount)));
+  // Memoized color calculation based on incident count
+  const getColor = (count, max) => {
+    const intensity = count / max;
+    const r = Math.floor(255); // stays the same
+    const g = Math.floor(140 - intensity * 100); // decreases with intensity
+    const b = Math.floor(0); // stays the same
+    return `rgb(${r}, ${g}, ${b})`;
+  };
 
-  // Define a custom tooltip to show the county name, incident count, and % of total.
+  // Memoize color assignment for performance
+  const top10CountiesWithColor = useMemo(() => {
+    return top10Counties.map(county => ({
+      ...county,
+      fill: getColor(county.incidentCount, maxIncidents)
+    }));
+  }, [top10Counties, maxIncidents]);
+
+  // Custom Tooltip with percentage calculation
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const count = payload[0].value;
@@ -53,6 +57,25 @@ const IncidentsByCountyChart = ({ data }) => {
     return null;
   };
 
+  // Return a loading state if no data is available
+  if (!data || data.length === 0) {
+    return (
+      <div style={{
+        flex: '1 1 400px',
+        minHeight: '300px',
+        backgroundColor: '#111',
+        borderRadius: '8px',
+        padding: '1rem',
+        color: '#ffcc80'
+      }}>
+        <h4>Incidents by County</h4>
+        <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem' }}>
+          <p style={{ color: '#aaa' }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       flex: '1 1 400px',
@@ -65,7 +88,7 @@ const IncidentsByCountyChart = ({ data }) => {
       <h4>Incidents by County</h4>
       <div style={{ height: '250px', backgroundColor: 'transparent', padding: '0.5rem' }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={top10Counties} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
+          <BarChart data={top10CountiesWithColor} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
             <XAxis
               dataKey="county"
               angle={-45}
@@ -75,7 +98,11 @@ const IncidentsByCountyChart = ({ data }) => {
             />
             <YAxis tick={{ fill: '#ccc' }} domain={[0, maxIncidents]} />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="incidentCount" fill="#ff5722" />
+            <Bar dataKey="incidentCount">
+              {top10CountiesWithColor.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.fill} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
