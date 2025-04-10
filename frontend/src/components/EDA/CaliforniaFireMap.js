@@ -51,7 +51,7 @@ const CaliforniaFireMap = () => {
       color: '#ffcc80'
     }}>
       <h4>California Fire Map</h4>
-      <div style={{ height: '500px' }}>
+      <div style={{ height: '550px' }}>
         <MapContainer
           center={[37.5, -119.5]}
           zoom={6.5}
