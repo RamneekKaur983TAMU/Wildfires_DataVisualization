@@ -2,10 +2,20 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path');
 
+const damageMap = {
+  'No Damage': 0,
+  'Affected (1-9%)': 5,
+  'Affected (10-25%)': 17.5,
+  'Affected (26-50%)': 38,
+  'Affected (51-74%)': 62.5,
+  'Affected (75-100%)': 87.5,
+  'Destroyed': 100
+};
+
+const filePath = path.join(__dirname, '..', 'datasets', 'TransformedData.csv');
+
 exports.getSummary = (req, res) => {
   const results = [];
-
-  const filePath = path.join(__dirname, '..', 'datasets', 'TransformedData.csv');
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -25,17 +35,7 @@ exports.getSummary = (req, res) => {
       });
       const highestFireDate = Object.entries(fireDateCount).sort((a, b) => b[1] - a[1])[0]?.[0] || '--';
 
-      // Damage estimation
-      const damageMap = {
-        'No Damage': 0,
-        'Affected (1-9%)': 5,
-        'Affected (10-25%)': 17.5,
-        'Affected (26-50%)': 38,
-        'Affected (51-74%)': 62.5,
-        'Affected (75-100%)': 87.5,
-        'Destroyed': 100
-      };
-
+      // Damage estimation by year
       const yearDamage = {};
       results.forEach(row => {
         const yearRaw = row['Start Year'];
@@ -67,16 +67,6 @@ exports.getSummary = (req, res) => {
       });
       const mostAffectedStreet = Object.entries(streetCount).sort((a, b) => b[1] - a[1])[0]?.[0] || '--';
 
-      // Optional debug log
-      console.log({
-        totalIncidents,
-        totalCities,
-        highestFireDate,
-        mostDamagedYear,
-        mostAffectedCity,
-        mostAffectedStreet
-      });
-
       res.json({
         totalIncidents,
         totalCities,
@@ -85,5 +75,34 @@ exports.getSummary = (req, res) => {
         mostAffectedCity,
         mostAffectedStreet
       });
+    });
+};
+
+exports.getDamageByCounty = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => results.push(row))
+    .on('end', () => {
+      const countyDamage = {};
+
+      results.forEach(row => {
+        const county = row['County']?.trim();
+        const damage = damageMap[row['Damage']] ?? 0;
+        if (!county) return;
+        if (!countyDamage[county]) {
+          countyDamage[county] = { total: 0, count: 0 };
+        }
+        countyDamage[county].total += damage;
+        countyDamage[county].count += 1;
+      });
+
+      const response = Object.entries(countyDamage).map(([county, { total, count }]) => ({
+        county,
+        averageDamage: parseFloat((total / count).toFixed(2))
+      }));
+
+      res.json(response);
     });
 };
