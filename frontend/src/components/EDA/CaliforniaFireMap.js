@@ -51,10 +51,13 @@ const CaliforniaFireMap = () => {
       color: '#ffcc80'
     }}>
       <h4>California Fire Map</h4>
-      <div style={{ height: '500px' }}>
+      <div style={{ height: '550px' }}>
         <MapContainer
           center={[37.5, -119.5]}
           zoom={6}
+          minZoom={6} // 👈 restrict zoom out
+          maxBounds={[[28, -128], [44, -110]]} // 👈 bounding box for California
+          maxBoundsViscosity={1.0} // 👈 prevent dragging outside
           style={{ height: '100%', width: '100%', backgroundColor: '#000' }}
           attributionControl={false}
         >
