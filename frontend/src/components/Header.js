@@ -1,6 +1,6 @@
 import React from 'react';
 import teamLogo from './images/teamlogo.jpeg';
-import headerImg from './images/header.jpeg';
+import headerImg from './images/header1.png';
 
 const Header = ({ setPage }) => {
   const navItems = [
