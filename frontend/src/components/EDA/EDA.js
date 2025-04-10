@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../header';
+import Header from '../Header';
 import FilterSidebar from './FilterSidebar';
 import KpiGrid from './KpiGrid';
 import DamageByCountyChart from './DamageByCountyChart';
@@ -8,6 +8,9 @@ import CaliforniaFireMap from './CaliforniaFireMap';
 import FiresOverTime from './FiresOverTime';
 import StructuresImpactedbyYear from './StructuresImpactedbyYear';
 import LossValueDistribution from './LossValueDistribution';
+import HeatMapMonthvsDay from './HeatMapMonthvsDay';
+import StructureDamageChart from './StructureTypevsDamage';
+
 
 const EDA = ({ setPage }) => {
   const [filters, setFilters] = useState({ year: '', area: '' });
@@ -15,7 +18,7 @@ const EDA = ({ setPage }) => {
   const [damageByCounty, setDamageByCounty] = useState([]);
   const [incidentsByCounty, setIncidentsByCounty] = useState([]);
 
-
+  const [fireData, setFireData]= useState({})
   useEffect(() => {
     const fetchKpis = async () => {
       const query = new URLSearchParams(filters).toString();
@@ -32,7 +35,21 @@ const EDA = ({ setPage }) => {
       const result = await res.json();
       setDamageByCounty(result);
     };
+
+    const fetchFireData = async ()=>
+    {
+      const res = await fetch('http://localhost:8000/api/damage-trend');
+      const result = await res.json();
+      const formattedData = result.map((item) => ({
+        year: item.year,  // Use 'year' as X-axis
+        fires: item.fireCount,  // Use 'fireCount' for the Y-axis
+      }));
+      console.log(formattedData)
+      setFireData(formattedData);
+    }
+
     fetchChart();
+    fetchFireData()
 
     const fetchIncidentsChart = async () => {
       const res = await fetch('http://localhost:8000/api/incidents-by-county');
@@ -53,9 +70,11 @@ const EDA = ({ setPage }) => {
             <CaliforniaFireMap />
             <DamageByCountyChart data={damageByCounty} />
             <IncidentsByCountyChart data={incidentsByCounty} />
-            <FiresOverTime />
+            <FiresOverTime data={fireData} />
             <StructuresImpactedbyYear />
             <LossValueDistribution />
+            <HeatMapMonthvsDay />
+            <StructureDamageChart/>
           </div>
         </div>
       </div>

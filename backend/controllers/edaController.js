@@ -108,6 +108,132 @@ exports.getDamageByCounty = (req, res) => {
 };
 
 
+exports.getDamageTrend = (req, res) => {
+  const results = [];
+ 
+ 
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => results.push(row))
+    .on('end', () => {
+      const trend = {};
+ 
+ 
+      results.forEach(row => {
+        const dateRaw = row['Incident Start Date'];
+ 
+ 
+        if (!dateRaw) return;
+ 
+ 
+        const date = new Date(dateRaw.trim());
+        if (isNaN(date)) return;
+ 
+ 
+        const year = date.getFullYear();
+ 
+ 
+        if (!trend[year]) {
+          trend[year] = { fireCount: 0 };
+        }
+ 
+ 
+        trend[year].fireCount += 1;
+      });
+ 
+ 
+      const response = Object.entries(trend)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([year, { fireCount }]) => ({
+          year,
+          fireCount,
+        }));
+ 
+ 
+      res.json(response);
+    })
+    .on('error', (err) => {
+      console.error('CSV parse error:', err);
+      res.status(500).json({ error: 'Failed to process data file.' });
+    });
+ };
+ 
+
+exports.getFireMapData = (req, res) => {
+    const results = [];
+    const fs = require('fs');
+    const csv = require('csv-parser');
+    const path = require('path');
+    const filePath = path.join(__dirname, '..', 'datasets', 'TransformedData.csv');
+  
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', (row) => results.push(row))
+      .on('end', () => {
+        const countyData = {};
+  
+        results.forEach(row => {
+          const county = row['County']?.trim();
+          const lat = parseFloat(row['Latitude']);
+          const lon = parseFloat(row['Longitude']);
+          if (!county || isNaN(lat) || isNaN(lon)) return;
+  
+          if (!countyData[county]) {
+            countyData[county] = { count: 0, latSum: 0, lonSum: 0 };
+          }
+  
+          countyData[county].count++;
+          countyData[county].latSum += lat;
+          countyData[county].lonSum += lon;
+        });
+  
+        const data = Object.entries(countyData).map(([county, info]) => ({
+          county,
+          totalFires: info.count,
+          lat: info.latSum / info.count,
+          lon: info.lonSum / info.count
+        }));
+  
+        res.json(data);
+    });
+};
+  
+
+// Controller for structure type vs damage and number of incidents
+exports.getStructureTypeDamageSummary = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (data) => results.push(data))
+    .on('end', () => {
+      const structureDamageData = {};
+
+      results.forEach(row => {
+        const structureType = row['Structure Category']?.trim(); // Ensure this is the right column name
+        const damage = damageMap[row['Damage']] ?? 0;
+
+        if (!structureType) return;
+
+        if (!structureDamageData[structureType]) {
+          structureDamageData[structureType] = { totalDamage: 0, incidentCount: 0 };
+        }
+
+        structureDamageData[structureType].totalDamage += damage;
+        structureDamageData[structureType].incidentCount += 1;
+      });
+
+      const response = Object.entries(structureDamageData).map(([structureType, { totalDamage, incidentCount }]) => ({
+        structureType,
+        averageDamage: parseFloat((totalDamage / incidentCount).toFixed(2)), // Average damage
+        totalIncidents: incidentCount,
+      }));
+
+      res.json(response);
+    });
+};
+
+
 exports.getIncidentsByCounty = (req, res) => {
   const results = [];
 

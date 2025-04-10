@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from './header';
+import Header from './Header';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 const EDA = ({ setPage }) => {
