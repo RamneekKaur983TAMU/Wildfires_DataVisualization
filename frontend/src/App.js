@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import EDA from './components/eda';
+import EDA from './components/EDA/EDA.js';
 import Predictions from './components/predictions';
 import Decision from './components/decision';
 import Header from './components/header';
