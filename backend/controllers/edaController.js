@@ -106,3 +106,29 @@ exports.getDamageByCounty = (req, res) => {
       res.json(response);
     });
 };
+
+
+exports.getIncidentsByCounty = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => results.push(row))
+    .on('end', () => {
+      const countyIncidents = {};
+
+      results.forEach(row => {
+        const county = row['County']?.trim();
+        if (!county) return;
+        countyIncidents[county] = (countyIncidents[county] || 0) + 1;
+      });
+
+      // Convert the object into an array of { county, incidentCount } objects.
+      const response = Object.entries(countyIncidents).map(([county, count]) => ({
+        county,
+        incidentCount: count
+      }));
+
+      res.json(response);
+    });
+};
