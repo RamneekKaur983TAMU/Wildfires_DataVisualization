@@ -1,4 +1,5 @@
 import React from 'react';
+import headerImg from './images/header1.png';
 import edaImg from './images/eda.jpeg';
 import predictionsImg from './images/predictions.jpeg';
 import decisionsImg from './images/decisions.jpeg';
@@ -12,6 +13,13 @@ const Home = ({ setPage }) => {
 
   return (
     <div style={{ backgroundColor: '#000', color: 'white', minHeight: '100vh', paddingBottom: '3rem' }}>
+      <div style={{
+        backgroundImage: `url(${headerImg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '220px',
+        width: '100%'
+      }} />
       <div style={{ padding: '2rem', textAlign: 'center' }}>
         <h2>Welcome to the Wildfire Data Visualization Dashboard</h2>
         <p>
