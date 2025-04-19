@@ -1,6 +1,5 @@
 import React from 'react';
 import teamLogo from './images/teamlogo.jpeg';
-import headerImg from './images/header1.png';
 
 const Header = ({ setPage }) => {
   const navItems = [
@@ -18,11 +17,11 @@ const Header = ({ setPage }) => {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '10px 30px',
-        height: '70px',
+        height: '50px',
         backgroundColor: '#000',
         color: 'white'
       }}>
-        <img src={teamLogo} alt="Team Logo" style={{ height: '80px', objectFit: 'contain' }} />
+        <img src={teamLogo} alt="Team Logo" style={{ height: '50px', objectFit: 'contain' }} />
         <nav>
           {navItems.map((item, idx) => (
             <button
@@ -35,7 +34,8 @@ const Header = ({ setPage }) => {
                 color: 'white',
                 fontWeight: 'bold',
                 cursor: 'pointer',
-                transition: 'color 0.3s'
+                transition: 'color 0.3s',
+                fontSize: '1.1rem',
               }}
               onMouseOver={e => e.target.style.color = '#ff4500'}
               onMouseOut={e => e.target.style.color = 'white'}
@@ -45,13 +45,6 @@ const Header = ({ setPage }) => {
           ))}
         </nav>
       </header>
-      <div style={{
-        backgroundImage: `url(${headerImg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        height: '220px',
-        width: '100%'
-      }} />
     </>
   );
 };

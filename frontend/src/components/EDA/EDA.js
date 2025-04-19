@@ -58,41 +58,74 @@ const EDA = ({ setPage }) => {
   }, []);
 
   return (
-    <div style={{ backgroundColor: '#000', color: 'white', minHeight: '100vh' }}>
-      <div style={{ display: 'flex', padding: '2rem' }}>
-        <FilterSidebar filters={filters} onChange={setFilters} />
-        <div style={{ flex: 1 }}>
-          <KpiGrid data={data} />
-          {/* Top row: California map + incidents & fires */}
-<div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1.5fr', gap: '2rem', marginTop: '2rem' }}>
-  <div>
-    <CaliforniaFireMap />
-  </div>
+    <div style={{
+      backgroundColor: '#000',
+      color: 'white',
+      minHeight: 'calc(100vh - 60px)',
+      padding: '0rem',
+      display: 'grid',
+      gridTemplateColumns: '0.8fr 2.4fr 0.8fr',
+      gridTemplateRows: 'auto auto auto',
+      gap: '0rem',
+      gridTemplateAreas: `
+        "kpis charts detail"
+        "kpis charts detail"
+        "kpis charts detail"
+        "kpis charts detail"
+      `
+    }}>
+      <div style={{ gridArea: 'kpis', marginBottom: '1rem', fontSize: '90%', backgroundColor: '#111', padding: '1rem', borderRadius: '8px', width: '80%' }}>
+        <h3 style={{ color: '#ffcc80', marginBottom: '0.5rem' }}>Key Performance Indicators</h3>
+        <KpiGrid data={data} />
+      </div>
 
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-    <IncidentsByCountyChart data={incidentsByCounty} />
-    <FiresOverTime data={fireData} />
-  </div>
-</div>
+      <div style={{ gridArea: 'charts', backgroundColor: '#111', padding: '0', borderRadius: '8px', display: 'grid', gap: '0', gridTemplateRows: 'auto auto auto', gridTemplateColumns: '1.4fr 1.6fr', gridTemplateAreas: `
+        "map charts"
+        "bottom bottom"
+        "heat heat"
+      ` }}>
+        <div style={{ gridArea: 'map', backgroundColor: '#1a1a1a', padding: '0', borderRadius: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0' }}>
+          <CaliforniaFireMap />
+        </div>
+        <div style={{ gridArea: 'charts', display: 'grid', gridTemplateRows: '1fr 1fr', gap: '0' }}>
+          <div style={{ backgroundColor: '#1a1a1a', padding: '0', borderRadius: '8px', height: '300px', width: '100%' }}>
+            <IncidentsByCountyChart data={incidentsByCounty} />
+          </div>
+          <div style={{ backgroundColor: '#1a1a1a', padding: '0', borderRadius: '8px', height: '240px', width: '100%' }}>
+            <FiresOverTime data={fireData} />
+          </div>
+        </div>
+        <div style={{ gridArea: 'bottom', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem', marginTop: '1.5rem' , height: '450px'}}>
+          <div style={{ backgroundColor: '#1a1a1a', padding: '0', borderRadius: '8px', height: '200px', width: '100%' }}>
+            <DamageVsFireIncidents />
+          </div>
+          <div style={{ backgroundColor: '#1a1a1a', padding: '0', borderRadius: '8px', height: '200px', width: '100%' }}>
+            <StructureDamageChart />
+          </div>
+        </div>
+        <div style={{
+          gridArea: 'heat',
+          backgroundColor: '#1a1a1a',
+          padding: '0',
+          borderRadius: '8px',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '220px'
+        }}>
+          <HeatMapMonthvsDay />
+        </div>
+      </div>
 
-{/* Full-width HeatMap */}
-<div style={{ marginTop: '2rem' }}>
-  <HeatMapMonthvsDay />
-</div>
-
-{/* Bottom row: two side-by-side charts */}
-<div
-  style={{
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '2rem',
-    marginTop: '2rem',
-  }}
->
-  <DamageVsFireIncidents />
-  <StructureDamageChart />
-</div>
-
+      <div style={{ gridArea: 'detail', backgroundColor: '#1c1c1c', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', width: '80%' }}>
+        <div style={{ backgroundColor: '#111', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+          <h4 style={{ color: '#ffcc80' }}>Filters</h4>
+          <FilterSidebar filters={filters} onChange={setFilters} />
+        </div>
+        <div style={{ backgroundColor: '#111', padding: '1rem', borderRadius: '8px' }}>
+          <h4 style={{ color: '#ffcc80' }}>Insights</h4>
+          <p style={{ fontSize: '0.8rem', color: '#aaa' }}>
+            The number of incidents has steadily increased over the years, with Los Angeles county reporting the highest average damage. The KPIs to the left summarize total incidents, cities affected, structures damaged, and financial losses.
+          </p>
         </div>
       </div>
     </div>
