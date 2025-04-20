@@ -2,6 +2,7 @@
   "name": "wildfires",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "@iconify/icons-mdi": "^1.2.48",
     "@testing-library/dom": "^10.4.0",
