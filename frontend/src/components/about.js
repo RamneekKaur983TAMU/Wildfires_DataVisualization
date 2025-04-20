@@ -10,60 +10,90 @@ const AboutUs = ({ setPage }) => {
   ];
 
   return (
-    <div style={{ backgroundColor: '#000', color: 'white', height: '100vh', overflowY: 'auto' }}>
-      <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
-        <h2 style={{ fontSize: '32px', marginBottom: '1rem', color: '#ff5722' }}>
-          Wildfires - Analysis, Prediction and Decision Making
+    <div style={{
+      backgroundColor: '#000',
+      color: 'white',
+      minHeight: '100vh',
+      overflowY: 'auto',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-start'
+    }}>
+      <div style={{ padding: '1rem 3rem 3rem', maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '36px', margin: '0 0 1rem 0', color: '#f2c94c' }}>
+          About Us
         </h2>
-        <h3 style={{ fontSize: '24px', marginBottom: '1rem' }}>Team Name: BlazeDefenders</h3>
+        <h3 style={{ fontSize: '28px', marginBottom: '1.5rem', marginTop: '1rem', color: '#f2c94c' }}>Team Name: BlazeDefenders</h3>
 
-        <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '2rem' }}>
+        <p style={{ fontSize: '18px', lineHeight: '1.6', marginBottom: '2.5rem' }}>
           We are a team of data enthusiasts dedicated to creating meaningful, insightful, and actionable
           tools for understanding and responding to wildfires. Our visual analytics system brings together
           analysis, prediction, and decision support in one platform.
         </p>
 
-        <h4 style={{ fontSize: '20px', marginBottom: '1rem' }}>Our Team</h4>
+        <h4 style={{ fontSize: '24px', marginBottom: '1.5rem', color: '#f2c94c' }}>Our Team</h4>
         <div style={{
-          display: 'flex',
-          gap: '1.5rem',
-          flexWrap: 'wrap',
-          justifyContent: 'center'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '2rem',
+          justifyItems: 'center'
         }}>
           {teamMembers.map((member, idx) => (
             <div key={idx} style={{
-              width: '180px',
+              width: '220px',
+              height: '240px',
               backgroundColor: '#111',
               borderRadius: '12px',
-              padding: '1rem',
+              padding: '1.5rem',
               textAlign: 'center',
-              boxShadow: '0 4px 12px rgba(255, 255, 255, 0.1)'
-            }}>
+              boxShadow: '0 4px 12px rgba(255, 255, 255, 0.1)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'transform 0.3s ease',
+              cursor: 'pointer'
+            }} 
+            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+            >
               <div style={{
-                width: '80px',
-                height: '80px',
+                width: '100px',
+                height: '100px',
                 borderRadius: '50%',
+                marginBottom: '0.8rem',
                 backgroundImage: `url(${member.imageUrl})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                margin: '0 auto 10px'
-              }} />
+                transition: 'transform 0.3s ease'
+              }} 
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+              />
               <p style={{ margin: 0, fontWeight: 'bold', color: '#ffcc80' }}>{member.name}</p>
             </div>
           ))}
         </div>
 
-        <h4 style={{ marginTop: '3rem', fontSize: '20px' }}>Introduction</h4>
-        <p style={{ fontSize: '16px', lineHeight: '1.6' }}>
-          Wildfires have become a pressing global issue, exacerbated by climate change, urban expansion,
-          and environmental degradation. This project aims to develop a visual analytics system that
-          facilitates a deeper understanding of wildfire occurrences, prediction models, and damage assessments.
-          Through interactive and data-driven visualizations, this system will support policymakers,
-          emergency responders, and researchers in decision-making processes.
-        </p>
+        <div style={{
+          fontSize: '18px',
+          lineHeight: '1.6',
+          marginTop: '3rem',
+          marginBottom: '2.5rem',
+          backgroundColor: '#111',
+          padding: '1.5rem',
+          borderLeft: '4px solid #ffcc80',
+          fontStyle: 'italic',
+          color: '#ccc',
+          borderRadius: '8px'
+        }}>
+          “This project was born out of our passion to contribute toward disaster resilience using data.
+          With wildfires increasingly affecting communities, we wanted to build something that can help
+          responders and planners anticipate, understand, and respond better—faster.”
+        </div>
 
-        <h4 style={{ marginTop: '3rem', fontSize: '20px' }}>We Value Your Feedback</h4>
-        <p style={{ fontSize: '16px', lineHeight: '1.6' }}>
+        <h4 style={{ marginTop: '3rem', fontSize: '24px', color: '#f2c94c' }}>We Value Your Feedback</h4>
+        <p style={{ fontSize: '18px', lineHeight: '1.6', marginBottom: '2.5rem' }}>
           We would love to hear your thoughts on this project and how we can improve. Please take a moment to fill out our feedback survey.
         </p>
         
@@ -75,13 +105,16 @@ const AboutUs = ({ setPage }) => {
             style={{
               backgroundColor: '#ff5722',
               color: '#fff',
-              padding: '10px 20px',
+              padding: '15px 25px',
               textDecoration: 'none',
               borderRadius: '5px',
-              fontSize: '16px',
-              marginTop: '1rem',
-              display: 'inline-block'
+              fontSize: '18px',
+              marginTop: '1.5rem',
+              display: 'inline-block',
+              transition: 'background-color 0.3s'
             }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e64a19'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ff5722'}
           >
             Take the Survey
           </a>
