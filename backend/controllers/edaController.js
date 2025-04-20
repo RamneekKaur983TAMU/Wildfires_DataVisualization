@@ -14,17 +14,25 @@ const damageMap = {
 
 const filePath = path.join(__dirname, '..', 'datasets', 'TransformedData.csv');
 
-const applyFilters = (row, year, county, damage) => {
-  return (
-    (!year || row['Start Year'] === year) &&
-    (!county || row['County']?.trim() === county) &&
-    (!damage || row['Damage']?.trim() === damage)
-  );
+const applyFilters = (row, years, counties, damage) => {
+  const rowYear = row['Start Year'];
+  const rowCounty = row['County']?.trim();
+  const rowDamage = row['Damage']?.trim();
+
+  const yearMatch = !years?.length || years.includes(rowYear);
+  const countyMatch = !counties?.length || counties.includes(rowCounty);
+  const damageMatch = !damage || rowDamage === damage;
+
+  return yearMatch && countyMatch && damageMatch;
 };
+
 
 exports.getSummary = (req, res) => {
   const results = [];
-  const { year, county, damage } = req.query;
+  let { year, county, damage } = req.query;
+
+year = Array.isArray(year) ? year : year ? [year] : [];
+county = Array.isArray(county) ? county : county ? [county] : [];
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -87,7 +95,10 @@ exports.getSummary = (req, res) => {
 
 exports.getDamageByCounty = (req, res) => {
   const results = [];
-  const { year, county, damage } = req.query;
+  let { year, county, damage } = req.query;
+
+year = Array.isArray(year) ? year : year ? [year] : [];
+county = Array.isArray(county) ? county : county ? [county] : [];
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -119,7 +130,10 @@ exports.getDamageByCounty = (req, res) => {
 
 exports.getDamageTrend = (req, res) => {
   const results = [];
-  const { year, county, damage } = req.query;
+  let { year, county, damage } = req.query;
+
+year = Array.isArray(year) ? year : year ? [year] : [];
+county = Array.isArray(county) ? county : county ? [county] : [];
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -150,7 +164,10 @@ exports.getDamageTrend = (req, res) => {
 
 exports.getFireMapData = (req, res) => {
   const results = [];
-  const { year, county, damage } = req.query;
+  let { year, county, damage } = req.query;
+
+year = Array.isArray(year) ? year : year ? [year] : [];
+county = Array.isArray(county) ? county : county ? [county] : [];
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -188,7 +205,10 @@ exports.getFireMapData = (req, res) => {
 
 exports.getStructureTypeDamageSummary = (req, res) => {
   const results = [];
-  const { year, county, damage } = req.query;
+  let { year, county, damage } = req.query;
+
+year = Array.isArray(year) ? year : year ? [year] : [];
+county = Array.isArray(county) ? county : county ? [county] : [];
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -223,7 +243,10 @@ exports.getStructureTypeDamageSummary = (req, res) => {
 
 exports.getIncidentsByCounty = (req, res) => {
   const results = [];
-  const { year, county, damage } = req.query;
+  let { year, county, damage } = req.query;
+
+year = Array.isArray(year) ? year : year ? [year] : [];
+county = Array.isArray(county) ? county : county ? [county] : [];
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -250,7 +273,10 @@ exports.getIncidentsByCounty = (req, res) => {
 
 exports.getDamageDistribution = (req, res) => {
   const results = [];
-  const { year, county, damage } = req.query;
+  let { year, county, damage } = req.query;
+
+year = Array.isArray(year) ? year : year ? [year] : [];
+county = Array.isArray(county) ? county : county ? [county] : [];
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -276,7 +302,10 @@ exports.getDamageDistribution = (req, res) => {
 
 exports.getHeatmapData = (req, res) => {
   const results = [];
-  const { year, county, damage } = req.query;
+  let { year, county, damage } = req.query;
+
+year = Array.isArray(year) ? year : year ? [year] : [];
+county = Array.isArray(county) ? county : county ? [county] : [];
 
   fs.createReadStream(filePath)
     .pipe(csv())

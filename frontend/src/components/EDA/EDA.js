@@ -10,13 +10,30 @@ import DamageVsFireIncidents from './DamageVsFireIncidents';
 import StructureDamageChart from './StructureTypevsDamage';
 
 const EDA = ({ setPage }) => {
-  const [filters, setFilters] = useState({ year: '', county: '', damage: '' });
+  const [filters, setFilters] = useState({
+    year: [],       // changed from ''
+    county: [],     // changed from ''
+    damage: ''      // single select remains the same
+  });
   const [filterOptions, setFilterOptions] = useState({
     years: [],
     counties: [],
     damageTypes: []
   });
 
+  const buildQuery = (filters) => {
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(val => {
+          if (val) params.append(key, val);
+        });
+      } else {
+        if (value) params.append(key, value);
+      }
+    });
+    return params.toString();
+  };
   const [data, setData] = useState(null);
   const [damageByCounty, setDamageByCounty] = useState([]);
   const [incidentsByCounty, setIncidentsByCounty] = useState([]);
@@ -28,7 +45,7 @@ const EDA = ({ setPage }) => {
 
   useEffect(() => {
     const fetchKpis = async () => {
-      const query = new URLSearchParams(filters).toString();
+      const query = buildQuery(filters)
       const res = await fetch(`http://localhost:8000/api/summary?${query}`);
       const result = await res.json();
       setData(result);
@@ -37,7 +54,7 @@ const EDA = ({ setPage }) => {
   }, [filters]);
 
   useEffect(() => {
-    const query = new URLSearchParams(filters).toString();
+    const query = buildQuery(filters)
 
     const fetchChart = async () => {
       const res = await fetch(`http://localhost:8000/api/damage-by-county?${query}`);
