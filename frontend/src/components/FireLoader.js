@@ -9,8 +9,8 @@ const FireLoader = () => (
     height: '100%',
     paddingTop: '2rem',
   }}>
-    <img src="fire-loader.gif" alt="Loading fire data..." style={{ width: '120px', height: '120px' }} />
-    <p style={{ color: '#ff5722', fontSize: '1.2rem', marginTop: '1rem' }}>Loading fire data...</p>
+    <img src="fire-loader.gif" alt="Loading fire gif..." style={{ width: '120px', height: '120px' }} />
+    <p style={{ color: '#ff5722', fontSize: '1.2rem', marginTop: '1rem' }}>Loading data...</p>
   </div>
 );
 
