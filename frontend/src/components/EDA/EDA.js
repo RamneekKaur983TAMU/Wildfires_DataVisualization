@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Header';
 import FilterSidebar from './FilterSidebar';
+import edaImage from './edaImage.jpeg';
 import KpiGrid from './KpiGrid';
 import IncidentsByCountyChart from './IncidentsByCountyChart';
 import CaliforniaFireMap from './CaliforniaFireMap';
@@ -258,11 +259,47 @@ const EDA = ({ setPage }) => {
           <h4 style={{ color: '#ffcc80' }}>Filters</h4>
           <FilterSidebar filters={filters} onChange={setFilters} options={filterOptions} />
         </div>
-        <div style={{ backgroundColor: '#111', padding: '0rem', borderRadius: '8px' }}>
-          <h4 style={{ color: '#ffcc80' }}>Insights</h4>
-          <p style={{ fontSize: '0.8rem', color: '#aaa' }}>
-            The number of incidents has steadily increased over the years, with Los Angeles county reporting the highest average damage. The KPIs to the left summarize total incidents, cities affected, structures damaged, and financial losses.
+        <div style={{
+          gridArea: 'detail',
+          backgroundColor: '#111',
+          padding: '0rem',
+          borderRadius: '8px',
+          marginBottom: '1rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          width: '100%'
+        }}>
+          <h4 style={{ color: '#ffd700' }}>Insights</h4>
+          <img src={edaImage} alt="Wildfire Dashboard Overview" style={{ width: '100%', borderRadius: '6px', marginBottom: '0.75rem' }} />
+          <p style={{ fontSize: '0.8rem', color: '#e0e0e0', marginBottom: '0.5rem' }}>
+            This dashboard highlights key trends in wildfire incidents across California, exposing high-risk areas, seasonal peaks, and damage patterns.
+            It empowers users to identify temporal and geographic fire hotspots for better preparedness and resource allocation.
           </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {[
+              'Wildfire incidents peaked in 2018 and 2020, then sharply declined.',
+              'Butte County alone accounts for a quarter of top reported fires.',
+              'Most fires either caused major damage or left no damage at all.',
+              'October 8 consistently sees the highest fire activity statewide.',
+              'Multiple and nonresidential structures face the highest fire impact.',
+              'Fresno, despite fewer headlines, shows over 2.9K total incidents.',
+              'Summer to fall months are high-risk periods across all counties.',
+              'Visual spike patterns suggest repeat extreme fire seasons.',
+              'Spatial clusters reveal inland and northern counties are most at risk.',
+              'Trends support targeting resources before October surges.'
+            ].map((text, i) => (
+              <div key={i} style={{
+                backgroundColor: '#222',
+                color: '#e0e0e0',
+                padding: '0.5rem',
+                borderRadius: '6px',
+                fontSize: '0.75rem'
+              }}>
+                {text}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       </div>
