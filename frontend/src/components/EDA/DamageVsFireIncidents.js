@@ -74,13 +74,13 @@ const DamageVsFireIncidents = ({ data = [] }) => {
       padding: '1rem',
       color: '#ffcc80'
     }}>
-      <h4>Damage Distribution</h4>
+      <h4 style={{ marginBottom: '4rem' }}>Damage Distribution</h4>
       <div style={{ height: '250px', backgroundColor: 'transparent', padding: '0.5rem' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={dataWithColor} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
             <XAxis
               dataKey="damage"
-              tick={{ fill: '#ccc' }}
+              tick={{ fontSize: 11, fill: '#ccc' }}
               interval={0}
               angle={-25}
               textAnchor="end"

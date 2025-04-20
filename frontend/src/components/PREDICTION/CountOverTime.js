@@ -8,7 +8,7 @@ import {
   Tooltip,
   CartesianGrid,
   Legend,
-  Label,
+  Label
 } from 'recharts';
 
 const CountOverTime = () => {
@@ -32,7 +32,6 @@ const CountOverTime = () => {
     fetchData();
   }, []);
 
-  // Custom tooltip component
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -41,13 +40,12 @@ const CountOverTime = () => {
           border: '1px solid #444',
           borderRadius: '4px',
           padding: '10px',
-          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.5)'
+          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.5)',
+          color: '#ffcc80'
         }}>
-          <p style={{ color: '#ffcc80', margin: '0 0 5px', fontWeight: 'bold' }}>
-            Year: {label}
-          </p>
+          <p style={{ marginBottom: '5px', fontWeight: 'bold' }}>Year: {label}</p>
           <p style={{ color: '#ff5722', margin: 0 }}>
-            Fire Count: <span style={{ fontWeight: 'bold' }}>{payload[0].value}</span>
+            Fire Count: <strong>{payload[0].value}</strong>
           </p>
         </div>
       );
@@ -55,16 +53,10 @@ const CountOverTime = () => {
     return null;
   };
 
-  // Custom legend renderer
   const renderLegend = (props) => {
     const { payload } = props;
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '10px',
-        color: '#ccc'
-      }}>
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px', color: '#ccc' }}>
         {payload.map((entry, index) => (
           <div key={`legend-${index}`} style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
             <div style={{
@@ -82,35 +74,17 @@ const CountOverTime = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: '#111',
-        padding: '1.5rem',
-        borderRadius: '12px',
-        color: '#ffcc80',
-        flex: '1 1 300px',
-        minHeight: '300px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-      }}
-    >
-      <h4 style={{
-        fontSize: '1.2rem',
-        marginTop: 0,
-        marginBottom: '1rem',
-        color: '#ffcc80',
-        textAlign: 'center',
-        fontWeight: 'bold'
-      }}>
-        Predicted Fire Count Over Time
-      </h4>
-      
-      <div style={{
-        height: '300px',
-        backgroundColor: '#222',
-        padding: '1rem',
-        borderRadius: '8px',
-        border: '1px solid #333'
-      }}>
+    <div style={{
+      flex: '1 1 400px',
+      minHeight: '300px',
+      backgroundColor: '#111',
+      borderRadius: '8px',
+      padding: '1rem',
+      color: '#ffcc80',
+      marginTop: '2rem' 
+    }}>
+      <h4>Predicted Fire Count Over Time</h4>
+      <div style={{ height: '250px', backgroundColor: 'transparent', padding: '0.5rem' }}>
         {loading ? (
           <div style={{
             display: 'flex',
@@ -167,7 +141,7 @@ const CountOverTime = () => {
                   style={{ fill: '#ccc', marginTop: '10px' }}
                 />
               </XAxis>
-              
+
               <YAxis
                 tick={{ fill: '#ccc' }}
                 stroke="#444"
@@ -180,15 +154,10 @@ const CountOverTime = () => {
                   style={{ textAnchor: 'middle', fill: '#ccc' }}
                 />
               </YAxis>
-              
+
               <Tooltip content={<CustomTooltip />} />
-              
-              <Legend
-                content={renderLegend}
-                verticalAlign="top"
-                height={36}
-              />
-              
+              <Legend content={renderLegend} verticalAlign="top" height={36} />
+
               <Area
                 type="monotone"
                 dataKey="count"
@@ -200,11 +169,11 @@ const CountOverTime = () => {
                 animationDuration={1500}
                 animationEasing="ease-in-out"
               />
-              
+
               <defs>
                 <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ff5722" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#ff5722" stopOpacity={0.1}/>
+                  <stop offset="5%" stopColor="#ff5722" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#ff5722" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
             </AreaChart>

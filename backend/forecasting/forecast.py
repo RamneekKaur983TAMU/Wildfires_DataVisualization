@@ -15,7 +15,7 @@ for county in df['County'].unique():
 
     if len(y) >= 1:
         try:
-            print(f"\n📍 Forecasting {county} using moving average on data: {list(zip(years, y))}")
+            # print(f"\n📍 Forecasting {county} using moving average on data: {list(zip(years, y))}")
 
             # Use last 3 values or all available if fewer
             window = 3
@@ -24,7 +24,7 @@ for county in df['County'].unique():
             forecast = sum(y_recent) / len(y_recent)
             predicted = max(int(round(forecast)), 0)
 
-            print(f"✅ Predicted for {county} using moving average: {predicted} incidents")
+            # print(f"✅ Predicted for {county} using moving average: {predicted} incidents")
 
             latest_row = county_df.iloc[-1]
             predictions.append({

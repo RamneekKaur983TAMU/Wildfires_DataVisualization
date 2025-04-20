@@ -47,7 +47,7 @@ const Predictions = ({ setPage }) => {
         borderRadius: '8px',
         width: '80%'
       }}>
-        <h3 style={{ color: '#ffcc80', marginTop: '1.3rem', marginBottom: '1.2rem' }}>Forecast KPIs</h3>
+        <h3 style={{ color: '#ffcc80', marginTop: '1.3rem', marginBottom: '0.5rem' }}>Forecast KPIs</h3>
         <PredictionKpiGrid data={kpiData} loading={loading} />
       </div>
 
@@ -66,30 +66,79 @@ const Predictions = ({ setPage }) => {
           "trend trend"
         `
       }}>
-        <div style={{ gridArea: 'map', backgroundColor: '#111', padding: '0', borderRadius: '8px' }}>
+        {/* 🔥 Forecast Map (Like CaliforniaFireMap) */}
+        <div style={{
+          gridArea: 'map',
+          backgroundColor: '#111',
+          padding: '0',
+          borderRadius: '8px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: '0'
+        }}>
           <ForecastMap />
         </div>
+
+        {/* 📊 Severity Gauge and Count Over Time (Like Incidents + Fires) */}
         <div style={{ gridArea: 'charts', display: 'grid', gridTemplateRows: '1fr 1fr', gap: '0' }}>
-          <div style={{ backgroundColor: '#111', padding: '0', borderRadius: '8px', height: '300px', width: '100%' }}>
+          <div style={{
+            backgroundColor: '#111',
+            padding: '0',
+            // marginTop: '-0.65rem',
+            borderRadius: '8px',
+            height: '300px',
+            width: '100%'
+          }}>
             <SeverityGauge />
           </div>
-          <div style={{ backgroundColor: '#111', padding: '0', borderRadius: '8px', height: '240px', width: '100%' }}>
+          <div style={{
+            backgroundColor: '#111',
+            padding: '0',
+            borderRadius: '8px',
+            height: '240px',
+            width: '100%'
+          }}>
             <CountOverTime />
           </div>
         </div>
-        <div style={{ gridArea: 'bottom', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem', marginTop: '1.5rem', height: '450px' }}>
-          <div style={{ backgroundColor: '#111', padding: '0', borderRadius: '8px', height: '200px', width: '100%' }}>
+
+        {/* 🍩 Donut + Radar (Like Damage vs Incidents + Structure Chart) */}
+        <div style={{
+          gridArea: 'bottom',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '0.25rem',
+          marginTop: '1.5rem',
+          height: '450px'
+        }}>
+          <div style={{
+            backgroundColor: '#111',
+            padding: '0',
+            borderRadius: '8px',
+            height: '200px',
+            width: '100%'
+          }}>
             <IntensityDonut />
           </div>
-          <div style={{ backgroundColor: '#111', padding: '0', borderRadius: '8px', height: '200px', width: '100%' }}>
+          <div style={{
+            backgroundColor: '#111',
+            padding: '0',
+            borderRadius: '8px',
+            height: '200px',
+            width: '100%'
+          }}>
             <RiskRadar />
           </div>
         </div>
+
+        {/* 📈 Trends (Like HeatMap) */}
         <div style={{
           gridArea: 'trend',
           backgroundColor: '#111',
           padding: '0',
           borderRadius: '8px',
+          marginTop: '-1.5rem',
           display: 'flex',
           flexDirection: 'column',
           height: '220px'
@@ -98,6 +147,7 @@ const Predictions = ({ setPage }) => {
         </div>
       </div>
 
+      {/* 📌 Right Sidebar - Insights */}
       <div style={{
         gridArea: 'detail',
         backgroundColor: '#111',
