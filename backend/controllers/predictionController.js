@@ -1,12 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
-const ss = require('simple-statistics');const { exec } = require('child_process');
+const { exec } = require('child_process');
 
 
 const filePath = path.join(__dirname, '../datasets/TransformedData.csv');
 
-// Summary widget
 exports.getPredictionSummary = (req, res) => {
  res.json({
    predictedHotspots: 27,
@@ -16,15 +15,6 @@ exports.getPredictionSummary = (req, res) => {
  });
 };
 
-
-// exports.getPredictionCount = (req, res) => {
-//   const years = ['2024', '2025', '2026'];
-//   const data = years.map(year => ({
-//     year,
-//     count: Math.floor(Math.random() * 300 + 200)
-//   }));
-//   res.json(data);
-// };
 
 
 exports.getPredictionCount = (req, res) => {
@@ -169,23 +159,6 @@ exports.getIntensityData = (req, res) => {
 };
 
 
-// // Radar chart categories
-exports.getRiskRadarData = (req, res) => {
-//  res.json([
-//    { category: 'Residential', risk: 85 },
-//    { category: 'Forest', risk: 92 },
-//    { category: 'Farmland', risk: 78 },
-//    { category: 'Urban', risk: 69 }
-//  ]);
-// };
-
-
-
-// exports.getSeverityGaugeData = (req, res) => {
-//   res.json([
-//     { name: 'Severity', value: 72 }
-//   ]);
-// };
 const damageWeights = {
   'No Damage': 0,
   'Affected (1-9%)': 1,

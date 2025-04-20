@@ -10,7 +10,7 @@ const {
   getRiskRadarData,
   getSeverityGaugeData,
   getForecastedHotspots
-} = require('../controllers/predictioncontroller');
+} = require('../controllers/predictionController');
 
 router.get('/summary', getPredictionSummary);
 router.get('/count', getPredictionCount);
