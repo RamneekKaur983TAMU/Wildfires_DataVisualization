@@ -14,58 +14,60 @@ const damageMap = {
 
 const filePath = path.join(__dirname, '..', 'datasets', 'TransformedData.csv');
 
+const applyFilters = (row, year, county, damage) => {
+  return (
+    (!year || row['Start Year'] === year) &&
+    (!county || row['County']?.trim() === county) &&
+    (!damage || row['Damage']?.trim() === damage)
+  );
+};
+
 exports.getSummary = (req, res) => {
   const results = [];
+  const { year, county, damage } = req.query;
 
   fs.createReadStream(filePath)
     .pipe(csv())
     .on('data', (data) => results.push(data))
     .on('end', () => {
-      const totalIncidents = results.length;
+      const filtered = results.filter(row => applyFilters(row, year, county, damage));
+      const totalIncidents = filtered.length;
 
-      // Unique cities
-      const citySet = new Set(results.map(row => row['City']?.trim()).filter(Boolean));
+      const citySet = new Set(filtered.map(row => row['City']?.trim()).filter(Boolean));
       const totalCities = citySet.size;
 
-      // Highest fire date
       const fireDateCount = {};
-      results.forEach(row => {
+      filtered.forEach(row => {
         const date = row['Incident Start Date']?.trim();
         if (date) fireDateCount[date] = (fireDateCount[date] || 0) + 1;
       });
       const highestFireDate = Object.entries(fireDateCount).sort((a, b) => b[1] - a[1])[0]?.[0] || '--';
 
-      // Damage estimation by year
       const yearDamage = {};
-      results.forEach(row => {
-        const yearRaw = row['Start Year'];
-        const year = typeof yearRaw === 'string' ? yearRaw.trim() : String(yearRaw);
-        const damage = damageMap[row['Damage']] ?? 0;
-        if (year) yearDamage[year] = (yearDamage[year] || 0) + damage;
+      filtered.forEach(row => {
+        const yearVal = row['Start Year'];
+        const damageVal = damageMap[row['Damage']] ?? 0;
+        if (yearVal) yearDamage[yearVal] = (yearDamage[yearVal] || 0) + damageVal;
       });
       const mostDamagedYear = Object.entries(yearDamage).sort((a, b) => b[1] - a[1])[0]?.[0] || '--';
 
-      // Most affected city
       const cityCount = {};
-      results.forEach(row => {
+      filtered.forEach(row => {
         const city = row['City']?.trim();
         if (city) cityCount[city] = (cityCount[city] || 0) + 1;
       });
       const mostAffectedCity = Object.entries(cityCount).sort((a, b) => b[1] - a[1])[0]?.[0] || '--';
 
-      // Most affected street
       const streetCount = {};
-      results.forEach(row => {
+      filtered.forEach(row => {
         const number = row['Street Number'];
         const name = row['Street Name']?.trim();
         const numClean = typeof number === 'string' ? number.trim() : String(number);
-
         if (numClean && name) {
           const street = `${numClean} ${name}`;
           streetCount[street] = (streetCount[street] || 0) + 1;
         }
       });
-
       const mostAffectedStreet = (
         Object.entries(streetCount)
           .filter(([street]) => street !== '0.0 Unknown')
@@ -85,6 +87,7 @@ exports.getSummary = (req, res) => {
 
 exports.getDamageByCounty = (req, res) => {
   const results = [];
+  const { year, county, damage } = req.query;
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -93,14 +96,16 @@ exports.getDamageByCounty = (req, res) => {
       const countyDamage = {};
 
       results.forEach(row => {
-        const county = row['County']?.trim();
-        const damage = damageMap[row['Damage']] ?? 0;
-        if (!county) return;
-        if (!countyDamage[county]) {
-          countyDamage[county] = { total: 0, count: 0 };
+        if (!applyFilters(row, year, county, damage)) return;
+
+        const c = row['County']?.trim();
+        const dmg = damageMap[row['Damage']] ?? 0;
+        if (!c) return;
+        if (!countyDamage[c]) {
+          countyDamage[c] = { total: 0, count: 0 };
         }
-        countyDamage[county].total += damage;
-        countyDamage[county].count += 1;
+        countyDamage[c].total += dmg;
+        countyDamage[c].count += 1;
       });
 
       const response = Object.entries(countyDamage).map(([county, { total, count }]) => ({
@@ -112,101 +117,78 @@ exports.getDamageByCounty = (req, res) => {
     });
 };
 
-
 exports.getDamageTrend = (req, res) => {
   const results = [];
- 
- 
+  const { year, county, damage } = req.query;
+
   fs.createReadStream(filePath)
     .pipe(csv())
     .on('data', (row) => results.push(row))
     .on('end', () => {
       const trend = {};
- 
- 
+
       results.forEach(row => {
+        if (!applyFilters(row, year, county, damage)) return;
+
         const dateRaw = row['Incident Start Date'];
- 
- 
         if (!dateRaw) return;
- 
- 
         const date = new Date(dateRaw.trim());
         if (isNaN(date)) return;
- 
- 
-        const year = date.getFullYear();
- 
- 
-        if (!trend[year]) {
-          trend[year] = { fireCount: 0 };
-        }
- 
- 
-        trend[year].fireCount += 1;
+        const y = date.getFullYear();
+
+        if (!trend[y]) trend[y] = { fireCount: 0 };
+        trend[y].fireCount += 1;
       });
- 
- 
+
       const response = Object.entries(trend)
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([year, { fireCount }]) => ({
-          year,
-          fireCount,
-        }));
- 
- 
-      res.json(response);
-    })
-    .on('error', (err) => {
-      console.error('CSV parse error:', err);
-      res.status(500).json({ error: 'Failed to process data file.' });
-    });
- };
- 
+        .map(([year, { fireCount }]) => ({ year, fireCount }));
 
-exports.getFireMapData = (req, res) => {
-    const results = [];
-    const fs = require('fs');
-    const csv = require('csv-parser');
-    const path = require('path');
-    const filePath = path.join(__dirname, '..', 'datasets', 'TransformedData.csv');
-  
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on('data', (row) => results.push(row))
-      .on('end', () => {
-        const countyData = {};
-  
-        results.forEach(row => {
-          const county = row['County']?.trim();
-          const lat = parseFloat(row['Latitude']);
-          const lon = parseFloat(row['Longitude']);
-          if (!county || isNaN(lat) || isNaN(lon)) return;
-  
-          if (!countyData[county]) {
-            countyData[county] = { count: 0, latSum: 0, lonSum: 0 };
-          }
-  
-          countyData[county].count++;
-          countyData[county].latSum += lat;
-          countyData[county].lonSum += lon;
-        });
-  
-        const data = Object.entries(countyData).map(([county, info]) => ({
-          county,
-          totalFires: info.count,
-          lat: info.latSum / info.count,
-          lon: info.lonSum / info.count
-        }));
-  
-        res.json(data);
+      res.json(response);
     });
 };
-  
 
-// Controller for structure type vs damage and number of incidents
+exports.getFireMapData = (req, res) => {
+  const results = [];
+  const { year, county, damage } = req.query;
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => results.push(row))
+    .on('end', () => {
+      const countyData = {};
+
+      results.forEach(row => {
+        if (!applyFilters(row, year, county, damage)) return;
+
+        const c = row['County']?.trim();
+        const lat = parseFloat(row['Latitude']);
+        const lon = parseFloat(row['Longitude']);
+        if (!c || isNaN(lat) || isNaN(lon)) return;
+
+        if (!countyData[c]) {
+          countyData[c] = { count: 0, latSum: 0, lonSum: 0 };
+        }
+
+        countyData[c].count++;
+        countyData[c].latSum += lat;
+        countyData[c].lonSum += lon;
+      });
+
+      const data = Object.entries(countyData).map(([county, info]) => ({
+        county,
+        totalFires: info.count,
+        lat: info.latSum / info.count,
+        lon: info.lonSum / info.count
+      }));
+
+      res.json(data);
+    });
+};
+
 exports.getStructureTypeDamageSummary = (req, res) => {
   const results = [];
+  const { year, county, damage } = req.query;
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -215,22 +197,23 @@ exports.getStructureTypeDamageSummary = (req, res) => {
       const structureDamageData = {};
 
       results.forEach(row => {
-        const structureType = row['Structure Category']?.trim(); // Ensure this is the right column name
-        const damage = damageMap[row['Damage']] ?? 0;
+        if (!applyFilters(row, year, county, damage)) return;
 
+        const structureType = row['Structure Category']?.trim();
+        const dmg = damageMap[row['Damage']] ?? 0;
         if (!structureType) return;
 
         if (!structureDamageData[structureType]) {
           structureDamageData[structureType] = { totalDamage: 0, incidentCount: 0 };
         }
 
-        structureDamageData[structureType].totalDamage += damage;
+        structureDamageData[structureType].totalDamage += dmg;
         structureDamageData[structureType].incidentCount += 1;
       });
 
       const response = Object.entries(structureDamageData).map(([structureType, { totalDamage, incidentCount }]) => ({
         structureType,
-        averageDamage: parseFloat((totalDamage / incidentCount).toFixed(2)), // Average damage
+        averageDamage: parseFloat((totalDamage / incidentCount).toFixed(2)),
         totalIncidents: incidentCount,
       }));
 
@@ -238,9 +221,9 @@ exports.getStructureTypeDamageSummary = (req, res) => {
     });
 };
 
-
 exports.getIncidentsByCounty = (req, res) => {
   const results = [];
+  const { year, county, damage } = req.query;
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -249,12 +232,13 @@ exports.getIncidentsByCounty = (req, res) => {
       const countyIncidents = {};
 
       results.forEach(row => {
-        const county = row['County']?.trim();
-        if (!county) return;
-        countyIncidents[county] = (countyIncidents[county] || 0) + 1;
+        if (!applyFilters(row, year, county, damage)) return;
+
+        const c = row['County']?.trim();
+        if (!c) return;
+        countyIncidents[c] = (countyIncidents[c] || 0) + 1;
       });
 
-      // Convert the object into an array of { county, incidentCount } objects.
       const response = Object.entries(countyIncidents).map(([county, count]) => ({
         county,
         incidentCount: count
@@ -266,18 +250,19 @@ exports.getIncidentsByCounty = (req, res) => {
 
 exports.getDamageDistribution = (req, res) => {
   const results = [];
+  const { year, county, damage } = req.query;
 
   fs.createReadStream(filePath)
     .pipe(csv())
     .on('data', row => results.push(row))
     .on('end', () => {
       const distribution = {};
+
       results.forEach(row => {
-        const damage = row['Damage']?.trim();
-        const id = row['_id']?.trim();
-        if (id) {
-          distribution[damage] = (distribution[damage] || 0) + 1;
-        }
+        if (!applyFilters(row, year, county, damage)) return;
+
+        const d = row['Damage']?.trim();
+        if (d) distribution[d] = (distribution[d] || 0) + 1;
       });
 
       const chartData = Object.entries(distribution).map(([damage, count]) => ({
@@ -291,6 +276,7 @@ exports.getDamageDistribution = (req, res) => {
 
 exports.getHeatmapData = (req, res) => {
   const results = [];
+  const { year, county, damage } = req.query;
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -299,17 +285,41 @@ exports.getHeatmapData = (req, res) => {
       const heatmap = {};
 
       results.forEach(row => {
+        if (!applyFilters(row, year, county, damage)) return;
+
         const month = row['Start Month Name']?.trim();
         const day = row['Start Day']?.trim();
-        const id = row['_id']?.trim();
-
-        if (month && day && id) {
-          const dayStr = String(day);
-          if (!heatmap[dayStr]) heatmap[dayStr] = {};
-          heatmap[dayStr][month] = (heatmap[dayStr][month] || 0) + 1;
+        if (month && day) {
+          if (!heatmap[day]) heatmap[day] = {};
+          heatmap[day][month] = (heatmap[day][month] || 0) + 1;
         }
       });
 
       res.json(heatmap);
+    });
+};
+
+exports.getFilterOptions = (req, res) => {
+  const results = [];
+
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', row => results.push(row))
+    .on('end', () => {
+      const years = new Set();
+      const counties = new Set();
+      const damages = new Set();
+
+      results.forEach(row => {
+        if (row['Start Year']) years.add(row['Start Year']);
+        if (row['County']) counties.add(row['County'].trim());
+        if (row['Damage']) damages.add(row['Damage'].trim());
+      });
+
+      res.json({
+        years: Array.from(years),
+        counties: Array.from(counties),
+        damageTypes: Array.from(damages)
+      });
     });
 };
