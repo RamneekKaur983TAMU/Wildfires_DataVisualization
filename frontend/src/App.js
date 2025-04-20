@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import EDA from './components/EDA/EDA.js';
 import Predictions from './components/PREDICTION/Predictions.js';
-import Decision from './components/decision';
+import Decision from './components/decision/decision';
 import Header from './components/Header.js';
 import Home from './components/home';
 import About from './components/about';
