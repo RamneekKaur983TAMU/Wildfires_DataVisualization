@@ -130,7 +130,7 @@ const CountOverTime = () => {
               <CartesianGrid stroke="#333" strokeDasharray="3 3" opacity={0.6} />
               <XAxis
                 dataKey="year"
-                tick={{ fill: '#ccc' }}
+                tick={{ fill: '#ccc', fontSize: 11 }}
                 stroke="#444"
                 tickLine={{ stroke: '#444' }}
               >
@@ -143,7 +143,7 @@ const CountOverTime = () => {
               </XAxis>
 
               <YAxis
-                tick={{ fill: '#ccc' }}
+                tick={{ fill: '#ccc', fontSize: 11 }}
                 stroke="#444"
                 tickLine={{ stroke: '#444' }}
               >

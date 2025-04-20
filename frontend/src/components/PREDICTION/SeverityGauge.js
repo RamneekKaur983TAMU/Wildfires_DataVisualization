@@ -74,7 +74,7 @@ const SeverityGauge = () => {
       padding: '1rem',
       color: '#ffcc80'
     }}>
-      <h4 style={{ marginBottom: '0.75rem', marginTop: '1.75rem' }}>Severity Gauge</h4>
+      <h4 style={{ marginBottom: '0.75rem', marginTop: '1.25rem' }}>Severity Gauge</h4>
 
       <div style={{ color: '#ffeb3b', fontWeight: 'bold', marginBottom: '-8rem' }}>
         {getDamageLabel()} / {maxValue}

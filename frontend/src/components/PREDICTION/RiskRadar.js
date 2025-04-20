@@ -105,7 +105,7 @@ const RiskRadar = () => {
         color: '#ffcc80'
       }}>
         <h4>Wildfire Risk Radar</h4>
-        <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem' }}>
+        <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem'}}>
           <p style={{ color: '#aaa' }}>
             {loading ? 'Loading risk data...' : 'No risk data available'}
           </p>
@@ -125,11 +125,19 @@ const RiskRadar = () => {
     }}>
       <h4>Wildfire Risk Radar</h4>
       <div style={{ height: '250px', backgroundColor: 'transparent', padding: '0.5rem' }}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="112%" height="100%">
           <RadarChart data={data}>
             <PolarGrid />
-            <PolarAngleAxis dataKey="subject" />
-            <PolarRadiusAxis domain={[0, 100]} />
+            <PolarAngleAxis
+              dataKey="subject"
+              tick={{ fontSize: 11, fill: '#ccc' }} 
+            />
+            {/* <PolarAngleAxis dataKey="subject" /> */}
+            <PolarRadiusAxis
+              tick={{ fontSize: 11, fill: '#ccc' }}
+              domain={[0, 100]}
+            />
+            {/* <PolarRadiusAxis domain={[0, 100]} /> */}
             <Radar
               name="Risk Score"
               dataKey="risk"
@@ -144,6 +152,7 @@ const RiskRadar = () => {
               fill="#FAD02C"
               fillOpacity={0.3}
             />
+            <Legend wrapperStyle={{ fontSize: '13px', color: '#ccc' }} />
             <Tooltip formatter={(value, name) => [value, name]} />
             <Legend />
           </RadarChart>

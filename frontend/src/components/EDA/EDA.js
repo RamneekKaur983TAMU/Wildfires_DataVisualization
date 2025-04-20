@@ -11,9 +11,9 @@ import StructureDamageChart from './StructureTypevsDamage';
 
 const EDA = ({ setPage }) => {
   const [filters, setFilters] = useState({
-    year: [],       // changed from ''
-    county: [],     // changed from ''
-    damage: ''      // single select remains the same
+    year: [],
+    county: [],
+    damage: ''
   });
   const [filterOptions, setFilterOptions] = useState({
     years: [],
@@ -34,6 +34,7 @@ const EDA = ({ setPage }) => {
     });
     return params.toString();
   };
+
   const [data, setData] = useState(null);
   const [damageByCounty, setDamageByCounty] = useState([]);
   const [incidentsByCounty, setIncidentsByCounty] = useState([]);
@@ -45,7 +46,7 @@ const EDA = ({ setPage }) => {
 
   useEffect(() => {
     const fetchKpis = async () => {
-      const query = buildQuery(filters)
+      const query = buildQuery(filters);
       const res = await fetch(`http://localhost:8000/api/summary?${query}`);
       const result = await res.json();
       setData(result);
@@ -54,7 +55,7 @@ const EDA = ({ setPage }) => {
   }, [filters]);
 
   useEffect(() => {
-    const query = buildQuery(filters)
+    const query = buildQuery(filters);
 
     const fetchChart = async () => {
       const res = await fetch(`http://localhost:8000/api/damage-by-county?${query}`);
@@ -132,7 +133,6 @@ const EDA = ({ setPage }) => {
       padding: '0rem',
       display: 'grid',
       gridTemplateColumns: '0.8fr 2.4fr 0.8fr',
-      gridTemplateRows: 'auto auto auto',
       gap: '2rem',
       gridTemplateAreas: `
         "kpis charts detail"
@@ -144,7 +144,7 @@ const EDA = ({ setPage }) => {
       <div style={{
         gridArea: 'kpis',
         marginBottom: '1rem',
-        marginLeft: '1.5rem', 
+        marginLeft: '1.5rem',
         fontSize: '90%',
         backgroundColor: '#111',
         padding: '1rem',
@@ -155,40 +155,79 @@ const EDA = ({ setPage }) => {
         <KpiGrid data={data} />
       </div>
 
-      <div style={{ gridArea: 'charts', backgroundColor: '#111', padding: '0', borderRadius: '8px', display: 'grid', gap: '0', gridTemplateRows: 'auto auto auto', gridTemplateColumns: '1.4fr 1.6fr', gridTemplateAreas: `
-        "map charts"
-        "bottom bottom"
-        "heat heat"
-      ` }}>
-        <div style={{ gridArea: 'map', backgroundColor: '#111', padding: '0', borderRadius: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0' }}>
-          <CaliforniaFireMap data={fireMapData} />
-        </div>
-        <div style={{ gridArea: 'charts', display: 'grid', gridTemplateRows: '1fr 1fr', gap: '0' }}>
-          <div style={{ backgroundColor: '#111', padding: '0', borderRadius: '8px', height: '300px', width: '100%' }}>
-            <IncidentsByCountyChart data={incidentsByCounty} />
-          </div>
-          <div style={{ backgroundColor: '#111', padding: '0', borderRadius: '8px', height: '240px', width: '100%' }}>
-            <FiresOverTime data={fireData} />
-          </div>
-        </div>
-        <div style={{ gridArea: 'bottom', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem', marginTop: '1.5rem', height: '450px' }}>
-          <div style={{ backgroundColor: '#111', padding: '0', borderRadius: '8px', height: '200px', width: '100%' }}>
-            <DamageVsFireIncidents data={damageDistributionData} />
-          </div>
-          <div style={{ backgroundColor: '#111', padding: '0', borderRadius: '8px', height: '200px', width: '100%' }}>
-            <StructureDamageChart data={structureDamageData} />
-          </div>
-        </div>
+      <div style={{
+        gridArea: 'charts',
+        backgroundColor: '#111',
+        padding: '0',
+        borderRadius: '8px',
+        display: 'grid',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        gap: '0'
+      }}>
         <div style={{
-          gridArea: 'heat',
-          backgroundColor: '#111',
-          padding: '0',
-          borderRadius: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '220px'
+          display: 'grid',
+          gridTemplateRows: 'auto auto auto',
+          gridTemplateColumns: '1.4fr 1.6fr',
+          gap: '0',
+          gridTemplateAreas: `
+            "map charts"
+            "bottom bottom"
+            "heat heat"
+          `
         }}>
-          <HeatMapMonthvsDay data={heatmapData} />
+          <div style={{ gridArea: 'map' }}>
+            <CaliforniaFireMap data={fireMapData} />
+          </div>
+          <div style={{ gridArea: 'charts', display: 'grid', gridTemplateRows: '1fr 1fr', gap: '0' }}>
+            <div style={{ height: '300px' }}>
+              <IncidentsByCountyChart data={incidentsByCounty} />
+            </div>
+            <div style={{ height: '240px' }}>
+              <FiresOverTime data={fireData} />
+            </div>
+          </div>
+          {/* <div style={{ gridArea: 'bottom', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem', marginTop: '1.5rem', height: '450px' }}>
+            <div style={{ height: '200px' }}>
+              <DamageVsFireIncidents data={damageDistributionData} />
+            </div>
+            <div style={{ height: '200px' }}>
+              <StructureDamageChart data={structureDamageData} />
+            </div>
+          </div> */}
+
+          <div style={{
+            gridArea: 'bottom',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '0.25rem',
+            marginTop: '1.5rem',
+            height: '450px'
+          }}>
+            <div style={{
+              backgroundColor: '#111',
+              padding: '0',
+              borderRadius: '8px',
+              height: '200px',
+              width: '100%'
+            }}>
+              <DamageVsFireIncidents data={damageDistributionData} />
+            </div>
+            <div style={{
+              backgroundColor: '#111',
+              padding: '0',
+              borderRadius: '8px',
+              height: '200px',
+              width: '100%',
+              marginLeft: '-1.7rem'
+            }}>
+              <StructureDamageChart data={structureDamageData} />
+            </div>
+          </div>
+          
+          <div style={{ gridArea: 'heat', height: '220px' }}>
+            <HeatMapMonthvsDay data={heatmapData} />
+          </div>
         </div>
       </div>
 

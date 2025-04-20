@@ -126,7 +126,8 @@ const Predictions = ({ setPage }) => {
             padding: '0',
             borderRadius: '8px',
             height: '200px',
-            width: '100%'
+            width: '100%',
+            marginLeft: '-1.4rem'
           }}>
             <RiskRadar />
           </div>
