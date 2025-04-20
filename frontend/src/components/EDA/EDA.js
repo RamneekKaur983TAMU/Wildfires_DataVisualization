@@ -126,21 +126,33 @@ const EDA = ({ setPage }) => {
   }, []);
 
   return (
-    <div style={{
-      backgroundColor: '#000',
-      color: 'white',
-      minHeight: 'calc(100vh - 60px)',
-      padding: '0rem',
-      display: 'grid',
-      gridTemplateColumns: '0.8fr 2.4fr 0.8fr',
-      gap: '2rem',
-      gridTemplateAreas: `
-        "kpis charts detail"
-        "kpis charts detail"
-        "kpis charts detail"
-        "kpis charts detail"
-      `
-    }}>
+    <>
+      <div style={{
+        textAlign: 'center',
+        marginTop: '0.5rem',
+        marginBottom: '0.5rem',
+        fontSize: '1.15rem',
+        fontWeight: 'bold',
+        color: '#f2c94c',
+        fontFamily: 'inherit'
+      }}>
+        Exploratory Data Analysis Dashboard - For Understanding Fire Incidents and Patterns
+      </div>
+      <div style={{
+        backgroundColor: '#000',
+        color: 'white',
+        minHeight: 'calc(100vh - 60px)',
+        padding: '0rem',
+        display: 'grid',
+        gridTemplateColumns: '0.8fr 2.4fr 0.8fr',
+        gap: '2rem',
+        gridTemplateAreas: `
+          "kpis charts detail"
+          "kpis charts detail"
+          "kpis charts detail"
+          "kpis charts detail"
+        `
+      }}>
       <div style={{
         gridArea: 'kpis',
         marginBottom: '1rem',
@@ -253,7 +265,8 @@ const EDA = ({ setPage }) => {
           </p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
