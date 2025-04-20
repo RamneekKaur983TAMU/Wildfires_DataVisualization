@@ -1,13 +1,23 @@
 import React from 'react';
+import fireIcon from './firedept.png';
+
+const formatNumber = (value) => {
+  if (typeof value === 'number') {
+    return value.toLocaleString();
+  }
+  return value;
+};
+
+const kpiKeys = [
+  { label: 'Predicted Hotspot', key: 'predictedHotspots' },
+  { label: 'Predicted Severity', key: 'predictedSeverity' },
+  { label: 'Predicted Time', key: 'predictedTime' },
+  { label: 'Predicted Count', key: 'predictedCount' },
+  { label: 'Estimated Severity Avg', key: 'estimatedSeverityAvg' },
+  { label: 'Forecasted Street', key: 'forecastedStreet' }
+];
 
 const PredictionKpiGrid = ({ data, loading }) => {
-  const kpis = [
-    { label: 'Predicted Hotspots', value: data.predictedHotspots },
-    { label: 'Predicted Severity', value: data.predictedSeverity },
-    { label: 'Predicted Time', value: data.predictedTime },
-    { label: 'Predicted Count', value: data.predictedCount }
-  ];
-
   return (
     <div
       style={{
@@ -16,7 +26,7 @@ const PredictionKpiGrid = ({ data, loading }) => {
         gap: '1rem'
       }}
     >
-      {kpis.map((kpi, index) => (
+      {kpiKeys.map((kpi, index) => (
         <div
           key={index}
           style={{
@@ -25,12 +35,13 @@ const PredictionKpiGrid = ({ data, loading }) => {
             padding: '1rem',
             color: '#ffcc80',
             textAlign: 'center',
-            boxShadow: '0 0 6px rgba(255, 255, 255, 0.1)'
+            boxShadow: '0 0 6px rgba(255, 255, 255, 0.1)',
+            position: 'relative'
           }}
         >
           <p style={{ margin: 0, fontSize: '0.85rem', color: '#ccc' }}>{kpi.label}</p>
           <h2 style={{ marginTop: '0.5rem', fontSize: '1.5rem', color: '#ff5722' }}>
-            {loading ? '--' : kpi.value}
+            {loading ? '--' : formatNumber(data[kpi.key])}
           </h2>
         </div>
       ))}
