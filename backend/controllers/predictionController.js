@@ -3,25 +3,12 @@ const path = require('path');
 const csv = require('csv-parser');
 const { exec } = require('child_process');
 
-
 const filePath = path.join(__dirname, '../datasets/TransformedData.csv');
-
-exports.getPredictionSummary = (req, res) => {
- res.json({
-   predictedHotspots: 27,
-   predictedSeverity: 'High',
-   predictedTime: '2-5 PM',
-   predictedCount: 689,
- });
-};
 
 
 
 exports.getPredictionCount = (req, res) => {
-
-
   const yearCounts = {};
- 
  
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -38,11 +25,9 @@ exports.getPredictionCount = (req, res) => {
         .filter((y) => y >= 2015 && y <= 2024)
         .sort((a, b) => a - b);
  
- 
       if (years.length < 2) {
         return res.status(500).json({ error: 'Not enough data to predict' });
       }
- 
  
       // Linear regression: y = mx + b
       const n = years.length;
@@ -51,17 +36,14 @@ exports.getPredictionCount = (req, res) => {
       const sumXY = years.reduce((sum, x) => sum + x * yearCounts[x], 0);
       const sumX2 = years.reduce((sum, x) => sum + x * x, 0);
  
- 
       const m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
       const b = (sumY - m * sumX) / n;
- 
  
       // Predict for 2025–2027
       const predictions = [2025, 2026, 2027].map((year) => ({
         year: String(year),
         count: Math.round(m * year + b),
       }));
- 
  
       res.json(predictions);
     })
@@ -531,4 +513,23 @@ exports.getIntensityData = (req, res) => {
 
       res.json(output);
     });
+};
+
+exports.getPredictionSummary = (req, res) => {
+  const summaryPath = path.join(__dirname, '../datasets/predicted_kpis.json');
+
+  fs.readFile(summaryPath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Failed to read summary_kpis.json:', err);
+      return res.status(500).json({ error: 'Failed to load summary KPI data' });
+    }
+
+    try {
+      const parsed = JSON.parse(data);
+      res.json(parsed);
+    } catch (parseError) {
+      console.error('Invalid JSON format in summary_kpis.json:', parseError);
+      res.status(500).json({ error: 'Invalid KPI JSON format' });
+    }
+  });
 };
