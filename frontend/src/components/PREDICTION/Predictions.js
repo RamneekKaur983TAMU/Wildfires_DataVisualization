@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PredictionKpiGrid from './PredictionKpiGrid';
 import ForecastMap from './ForecastMap';
+import predictionImage from './predictionImage.jpeg';
 import SeverityGauge from './SeverityGauge';
 import CountOverTime from './CountOverTime';
 import IntensityDonut from './IntensityDonut';
@@ -172,12 +173,54 @@ const Predictions = ({ setPage }) => {
           gap: '1rem',
           width: '80%'
         }}>
-          <div style={{ backgroundColor: '#111', padding: '0rem', borderRadius: '8px' }}>
+          {/* <div style={{ backgroundColor: '#111', padding: '0rem', borderRadius: '8px' }}>
             <h4 style={{ color: '#ffcc80' }}>Insights</h4>
             <p style={{ fontSize: '0.8rem', color: '#aaa' }}>
               The predictions reflect expected hotspots, severity, and resource allocation zones for 2025. The visualizations assist emergency teams in anticipating critical regions and acting proactively.
             </p>
+          </div> */}
+          <div style={{
+            gridArea: 'detail',
+            backgroundColor: '#111',
+            padding: '0rem',
+            borderRadius: '8px',
+            marginBottom: '1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            width: '100%'
+          }}>
+            <h4 style={{ color: '#ffd700' }}>Insights</h4>
+            <img src={predictionImage} alt="Wildfire Dashboard Overview" style={{ width: '100%', borderRadius: '6px', marginBottom: '0.75rem' }} />
+            <p style={{ fontSize: '0.8rem', color: '#e0e0e0', marginBottom: '0.5rem' }}>
+              This prediction dashboard highlights future wildfire hotspots, severity levels, and timing across California. It supports emergency planning through spatial and temporal risk forecasting.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {[
+                'Camarillo is forecasted as the top hotspot.',
+                'Peak fire month is expected to be November.',
+                '6,973 fires predicted, but with no expected damage.',
+                'Severity score of 3/4 signals elevated risk.',
+                '91.4% of predicted fires are low intensity.',
+                'Other Minor Structures face highest risk.',
+                'Fire counts drop in 2022–2023, then rebound in 2024.',
+                '2024 predictions closely match actuals (94% confidence).',
+                'Hotspots cluster near Sacramento and San Jose.',
+                'Few severe fires expected; spread is mostly moderate.'
+              ].map((text, i) => (
+                <div key={i} style={{
+                  backgroundColor: '#222',
+                  color: '#e0e0e0',
+                  padding: '0.5rem',
+                  borderRadius: '6px',
+                  fontSize: '0.75rem'
+                }}>
+                  {text}
+                </div>
+              ))}
+            </div>
           </div>
+
         </div>
       </div>
     </>
