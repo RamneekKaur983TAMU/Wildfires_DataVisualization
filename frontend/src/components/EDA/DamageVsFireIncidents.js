@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   BarChart,
   Bar,
@@ -9,31 +9,19 @@ import {
   Cell,
 } from 'recharts';
 
-const DamageDistributionChart = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetch('http://localhost:8000/api/damage-distribution')
-      .then(res => res.json())
-      .then(setData)
-      .catch(err => console.error('Error fetching damage distribution:', err));
-  }, []);
-
-  // Memoized calculation of the maximum damage count for color scaling
+const DamageVsFireIncidents = ({ data = [] }) => {
   const maxCount = useMemo(() => {
-    return Math.max(...data.map(item => item.count));
+    return Math.max(...data.map(item => item.count), 1);
   }, [data]);
 
-  // Memoized color calculation based on the damage count
   const getColor = (count, max) => {
-    const intensity = 1 - count / max; // Reverse the intensity to make higher values darker
-    const r = 255; // Red stays constant
-    const g = Math.floor(87 + intensity * 100); // Decreases with higher count, making it darker
-    const b = 34; // Blue stays constant
+    const intensity = 1 - count / max;
+    const r = 255;
+    const g = Math.floor(87 + intensity * 100);
+    const b = 34;
     return `rgb(${r}, ${g}, ${b})`;
   };
 
-  // Memoize color assignment for each bar based on damage count
   const dataWithColor = useMemo(() => {
     return data.map(item => ({
       ...item,
@@ -41,7 +29,6 @@ const DamageDistributionChart = () => {
     }));
   }, [data, maxCount]);
 
-  // Custom Tooltip with damage count
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const count = payload[0].value;
@@ -112,4 +99,4 @@ const DamageDistributionChart = () => {
   );
 };
 
-export default DamageDistributionChart;
+export default DamageVsFireIncidents;
