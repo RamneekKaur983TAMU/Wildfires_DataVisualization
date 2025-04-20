@@ -11,7 +11,7 @@ const Header = ({ setPage, activePage }) => {
   ];
 
   return (
-    <>
+    <div style={{ marginBottom: '1rem' }}>
       <header style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -61,7 +61,7 @@ const Header = ({ setPage, activePage }) => {
           ))}
         </nav>
       </header>
-    </>
+    </div>
   );
 };
 

@@ -5,6 +5,16 @@ const FilterSidebar = ({ filters, onChange, options }) => {
     onChange({ ...filters, [e.target.name]: e.target.value });
   };
 
+  const commonStyle = {
+    width: '100%',
+    marginTop: '0.25rem',
+    backgroundColor: '#111',
+    color: '#fff',
+    border: '1px solid #555',
+    borderRadius: '4px',
+    padding: '0.25rem'
+  };
+
   return (
     <div style={{ width: '220px', marginRight: '2rem' }}>
       <div style={{ marginBottom: '1rem' }}>
@@ -13,7 +23,7 @@ const FilterSidebar = ({ filters, onChange, options }) => {
           name="year"
           value={filters.year}
           onChange={handleChange}
-          style={{ width: '100%', marginTop: '0.25rem' }}
+          style={commonStyle}
         >
           <option value="">All</option>
           {options.years.map((year) => (
@@ -28,7 +38,7 @@ const FilterSidebar = ({ filters, onChange, options }) => {
           name="county"
           value={filters.county}
           onChange={handleChange}
-          style={{ width: '100%', marginTop: '0.25rem' }}
+          style={commonStyle}
         >
           <option value="">All</option>
           {options.counties.map((county) => (
@@ -43,7 +53,7 @@ const FilterSidebar = ({ filters, onChange, options }) => {
           name="damage"
           value={filters.damage}
           onChange={handleChange}
-          style={{ width: '100%', marginTop: '0.25rem' }}
+          style={commonStyle}
         >
           <option value="">All</option>
           {options.damageTypes.map((type) => (
