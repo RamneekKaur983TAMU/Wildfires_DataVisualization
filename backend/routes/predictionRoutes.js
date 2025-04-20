@@ -8,8 +8,9 @@ const {
   getForecastTrends,
   getIntensityData,
   getRiskRadarData,
-  getSeverityGaugeData
-} = require('../controllers/predictionController');
+  getSeverityGaugeData,
+  getForecastedHotspots
+} = require('../controllers/predictioncontroller');
 
 router.get('/summary', getPredictionSummary);
 router.get('/count', getPredictionCount);
@@ -18,5 +19,7 @@ router.get('/trends', getForecastTrends);
 router.get('/intensity', getIntensityData);
 router.get('/risk', getRiskRadarData);
 router.get('/severity', getSeverityGaugeData);
+router.get('/forecast', getForecastedHotspots);
+
 
 module.exports = router;

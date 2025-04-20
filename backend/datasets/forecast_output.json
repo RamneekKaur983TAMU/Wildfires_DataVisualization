@@ -1,0 +1,42 @@
+[
+  {
+    "county": "Santa Cruz",
+    "lat": 37.11916,
+    "lng": -122.159008,
+    "risk": "High",
+    "predicted_incidents": 2318,
+    "percentage": "26.0%"
+  },
+  {
+    "county": "Napa",
+    "lat": 38.539617,
+    "lng": -122.398387,
+    "risk": "High",
+    "predicted_incidents": 2092,
+    "percentage": "23.4%"
+  },
+  {
+    "county": "Plumas",
+    "lat": 40.135229,
+    "lng": -120.957578,
+    "risk": "High",
+    "predicted_incidents": 1792,
+    "percentage": "20.1%"
+  },
+  {
+    "county": "El Dorado",
+    "lat": 38.721939,
+    "lng": -120.763386,
+    "risk": "High",
+    "predicted_incidents": 1540,
+    "percentage": "17.2%"
+  },
+  {
+    "county": "Solano",
+    "lat": 38.414529,
+    "lng": -122.026879,
+    "risk": "High",
+    "predicted_incidents": 1188,
+    "percentage": "13.3%"
+  }
+]
