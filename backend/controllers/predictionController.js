@@ -148,17 +148,6 @@ exports.getForecastTrends = (req, res) => {
 };
 
 
-// Risk intensity bar chart
-exports.getIntensityData = (req, res) => {
- res.json([
-   { level: 'Low', value: 18 },
-   { level: 'Moderate', value: 32 },
-   { level: 'High', value: 21 },
-   { level: 'Severe', value: 9 }
- ]);
-};
-
-
 const damageWeights = {
   'No Damage': 0,
   'Affected (1-9%)': 1,
@@ -463,4 +452,83 @@ exports.getForecastedHotspots = (req, res) => {
       res.json(JSON.parse(data));
     });
   });
+};
+
+
+function linearRegression(xs, ys) {
+  const n      = xs.length;
+  const meanX  = xs.reduce((a, b) => a + b, 0) / n;
+  const meanY  = ys.reduce((a, b) => a + b, 0) / n;
+  const num    = xs.reduce((sum, x, i) => sum + (x - meanX) * (ys[i] - meanY), 0);
+  const den    = xs.reduce((sum, x) => sum + (x - meanX) ** 2, 0);
+  const m      = num / den;
+  const b      = meanY - m * meanX;
+  return { m, b };
+}
+
+exports.getIntensityData = (req, res) => {
+  const rows = [];
+  fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', row => rows.push(row))
+    .on('end', () => {
+      // 1) Count each damage-level per year
+      const yearly = {};
+      rows.forEach(r => {
+        const y   = parseInt(r['Start Year'], 10);
+        const lvl = r['Damage']?.trim() || 'Unknown';
+        if (!y) return;
+        yearly[y] = yearly[y] || {};
+        yearly[y][lvl] = (yearly[y][lvl]||0) + 1;
+      });
+
+      // 2) Build sorted years array and all distinct levels
+      const years  = Object.keys(yearly).map(Number).sort();
+      const levels = Array.from(new Set(rows.map(r => r['Damage']?.trim()).filter(Boolean)));
+
+      // 3) Convert counts → proportions by year
+      years.forEach(y => {
+        const total = Object.values(yearly[y]).reduce((a,b) => a + b, 0) || 1;
+        levels.forEach(l => {
+          yearly[y][l] = (yearly[y][l] || 0) / total;
+        });
+      });
+
+      // 4) Fit regression per level → raw prediction for 2025
+      const rawPred = {};
+      levels.forEach(l => {
+        const xs = [], ys = [];
+        years.forEach(y => {
+          xs.push(y);
+          ys.push(yearly[y][l] || 0);
+        });
+        const { m, b } = linearRegression(xs, ys);
+        rawPred[l] = Math.max(0, m * 2025 + b);
+      });
+
+      // 5) Map original levels into 4 buckets
+      const bucketMap = {
+        'No Damage':         'Low',
+        'Affected (1-9%)':   'Moderate',
+        'Affected (10-25%)': 'Moderate',
+        'Affected (26-50%)': 'High',
+        'Affected (51-74%)': 'High',
+        'Affected (75-100%)': 'Severe',
+        'Destroyed':         'Severe'
+      };
+      const agg = { Low: 0, Moderate: 0, High: 0, Severe: 0 };
+      Object.entries(rawPred).forEach(([lvl, v]) => {
+        const bucket = bucketMap[lvl] || 'Moderate';
+        agg[bucket] += v;
+      });
+
+      // 6) Normalize to 100% and format
+      const totalAgg = Object.values(agg).reduce((a,b) => a + b, 0) || 1;
+      const output = ['Low','Moderate','High','Severe'].map(level => ({
+        level,
+        value: parseFloat(((agg[level] / totalAgg) * 100).toFixed(1))
+      }));
+
+      res.json(output);
+    });
 };
