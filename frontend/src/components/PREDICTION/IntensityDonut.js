@@ -8,19 +8,13 @@ import {
   Legend,
 } from 'recharts';
 
-const IntensityDonut = () => {
-  const [data, setData] = useState([]);
+const IntensityDonut = ({ data }) => {
+  const safeData = Array.isArray(data) ? data : [];
+
 
   const COLORS = ['#ffcc80', '#ff9800', '#f44336', '#d32f2f'];
 
-  useEffect(() => {
-    fetch('http://localhost:8000/api/prediction/intensity')
-      .then((res) => res.json())
-      .then(setData)
-      .catch((err) => console.error('Failed to load intensity data:', err));
-  }, []);
-
-  if (data.length === 0) {
+  if (safeData.length === 0) {
     return (
       <div style={{
         flex: '1 1 400px',
@@ -52,14 +46,14 @@ const IntensityDonut = () => {
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={data}
+              data={safeData}
               dataKey="value"
               nameKey="level"
               innerRadius={50}
               outerRadius={80}
               label
             >
-              {data.map((entry, index) => (
+              {safeData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>

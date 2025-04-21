@@ -11,17 +11,10 @@ import {
   LabelList,
 } from 'recharts';
 
-const ForecastTrends = () => {
-  const [data, setData] = useState([]);
+const ForecastTrends = ({ data }) => {
+  const safeData = Array.isArray(data) ? data : [];
 
-  useEffect(() => {
-    fetch('http://localhost:8000/api/prediction/trends')
-      .then(res => res.json())
-      .then(data => setData(data))
-      .catch(err => console.error('Failed to load forecast trend data:', err));
-  }, []);
-
-  const processedData = data.map((entry) => {
+  const processedData = safeData.map((entry) => {
     const isFuture = entry.year > 2024;
     return {
       year: entry.year,

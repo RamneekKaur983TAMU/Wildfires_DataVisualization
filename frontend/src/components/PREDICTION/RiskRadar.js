@@ -10,9 +10,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const RiskRadar = () => {
+const RiskRadar = ({ data: rawData }) => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const structureTypeMapping = {
     'SINGLE FAMILY': 'Single Residence',
@@ -57,44 +56,36 @@ const RiskRadar = () => {
   };
 
   useEffect(() => {
-    const fetchRiskRadarData = async () => {
-      try {
-        const res = await fetch('/api/prediction/risk');
-        if (res.ok) {
-          const responseData = await res.json();
-          const groupedData = responseData.reduce((acc, item) => {
-            if (item.category === "Overall") return acc;
-            const categoryName = structureTypeMapping[item.category.toUpperCase()] || 'Other Minor Structure';
-            if (!acc[categoryName]) {
-              acc[categoryName] = {
-                totalRisk: 0,
-                totalIncidents: 0,
-                count: 0
-              };
-            }
-            acc[categoryName].totalRisk += item.risk || 0;
-            acc[categoryName].totalIncidents += item.predictedIncidents || 0;
-            acc[categoryName].count += 1;
-            return acc;
-          }, {});
-          const transformedData = Object.entries(groupedData).map(([category, values]) => ({
-            subject: category,
-            risk: Math.round(values.totalRisk / values.count),
-            predictedIncidents: Math.min(100, Math.round(values.totalIncidents / values.count))
-          }));
-          setData(transformedData);
-        }
-      } catch (err) {
-        console.error('Failed to load risk radar data:', err);
-      } finally {
-        setLoading(false);
+    if (!Array.isArray(rawData) || rawData.length === 0) {
+      setData([]);
+      return;
+    }
+
+    const responseData = rawData;
+    const groupedData = responseData.reduce((acc, item) => {
+      if (item.category === "Overall") return acc;
+      const categoryName = structureTypeMapping[item.category.toUpperCase()] || 'Other Minor Structure';
+      if (!acc[categoryName]) {
+        acc[categoryName] = {
+          totalRisk: 0,
+          totalIncidents: 0,
+          count: 0
+        };
       }
-    };
+      acc[categoryName].totalRisk += item.risk || 0;
+      acc[categoryName].totalIncidents += item.predictedIncidents || 0;
+      acc[categoryName].count += 1;
+      return acc;
+    }, {});
+    const transformedData = Object.entries(groupedData).map(([category, values]) => ({
+      subject: category,
+      risk: Math.round(values.totalRisk / values.count),
+      predictedIncidents: Math.min(100, Math.round(values.totalIncidents / values.count))
+    }));
+    setData(transformedData);
+  }, [rawData]);
 
-    fetchRiskRadarData();
-  }, []);
-
-  if (loading || data.length === 0) {
+  if (data.length === 0) {
     return (
       <div style={{
         flex: '1 1 400px',
@@ -105,10 +96,8 @@ const RiskRadar = () => {
         color: '#ffcc80'
       }}>
         <h4>Wildfire Risk Radar</h4>
-        <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem'}}>
-          <p style={{ color: '#aaa' }}>
-            {loading ? 'Loading risk data...' : 'No risk data available'}
-          </p>
+        <div style={{ height: '250px', backgroundColor: '#222', padding: '0.5rem' }}>
+          <p style={{ color: '#aaa' }}>No risk data available</p>
         </div>
       </div>
     );
@@ -130,7 +119,7 @@ const RiskRadar = () => {
             <PolarGrid />
             <PolarAngleAxis
               dataKey="subject"
-              tick={{ fontSize: 11, fill: '#ccc' }} 
+              tick={{ fontSize: 11, fill: '#ccc' }}
             />
             {/* <PolarAngleAxis dataKey="subject" /> */}
             <PolarRadiusAxis

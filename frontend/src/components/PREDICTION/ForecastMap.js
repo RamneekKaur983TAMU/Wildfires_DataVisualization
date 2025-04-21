@@ -1,33 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-const ForecastMap = () => {
-  const [points, setPoints] = useState([]);
-
-  useEffect(() => {
-    console.log('🔍 Fetching forecast_output.json...');
-    fetch('/forecast_output.json')
-      .then(res => {
-        console.log('✅ Response received:', res);
-        return res.json();
-      })
-      .then(data => {
-        console.log('📦 Parsed JSON:', data);
-        if (Array.isArray(data)) {
-          setPoints(data);
-          console.log(`✅ Loaded ${data.length} forecast points.`);
-        } else {
-          console.error('❌ JSON did not return an array:', data);
-          setPoints([]);
-        }
-      })
-      .catch(err => {
-        console.error('🚨 Error loading forecast map points:', err);
-        setPoints([]);
-      });
-  }, []);
-
+const ForecastMap = ({ data }) => {
   return (
     <div style={{
       flex: '1 1 400px',
@@ -49,7 +24,7 @@ const ForecastMap = () => {
           attributionControl={false}
         >
           <TileLayer url='https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' />
-          {points.map((p, idx) => (
+          {data.map((p, idx) => (
             <CircleMarker
               key={idx}
               center={[p.lat, p.lng]}

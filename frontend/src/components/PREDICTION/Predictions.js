@@ -7,10 +7,20 @@ import CountOverTime from './CountOverTime';
 import IntensityDonut from './IntensityDonut';
 import RiskRadar from './RiskRadar';
 import ForecastTrends from './ForecastTrends';
+import FireLoader from '../FireLoader'; // 🔥 fire‑loader component
 
 const Predictions = ({ setPage }) => {
   const [kpiData, setKpiData] = useState({});
+  const [forecastData, setForecastData] = useState({});
+  const [severityData, setSeverityData] = useState({});
+  const [countOverTimeData, setCountOverTimeData] = useState({});
+  const [donutData, setDonutData] = useState({});
+  const [riskRadarData, setRiskRadarData] = useState({});
+  const [forecastTrendsData, setForecastTrendsData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [chartsLoading, setChartsLoading] = useState(true);
+  const [loadedCount, setLoadedCount] = useState(0);
+
 
   useEffect(() => {
     fetch('http://localhost:8000/api/prediction/summary')
@@ -20,6 +30,74 @@ const Predictions = ({ setPage }) => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    setChartsLoading(true);
+    setLoadedCount(0);
+
+    const fetchData = async () => {
+
+      // Fetch all chart data
+      const fetchForecastData = async () => {
+        const res = await fetch('/forecast_output.json');
+        const result = await res.json();
+        setForecastData(result);
+        setLoadedCount((prev) => prev + 1);
+      };
+
+      const fetchSeverityData = async () => {
+        const res = await fetch('/api/prediction/severity');
+        const result = await res.json();
+        setSeverityData(result);
+        setLoadedCount((prev) => prev + 1);
+      };
+
+      const fetchCountOverTimeData = async () => {
+        const res = await fetch('/api/prediction/count');
+        const result = await res.json();
+        setCountOverTimeData(result);
+        setLoadedCount((prev) => prev + 1);
+      };
+
+      const fetchDonutData = async () => {
+        const res = await fetch('/api/prediction/intensity');
+        const result = await res.json();
+        setDonutData(result);
+        setLoadedCount((prev) => prev + 1);
+      };
+
+      const fetchRiskRadarData = async () => {
+        const res = await fetch('/api/prediction/risk');
+        const result = await res.json();
+        setRiskRadarData(result);
+        setLoadedCount((prev) => prev + 1);
+      };
+
+      const fetchForecastTrendsData = async () => {
+        const res = await fetch('/api/prediction/trends');
+        const result = await res.json();
+        setForecastTrendsData(result);
+        setLoadedCount((prev) => prev + 1);
+      };
+
+      // Trigger the fetches
+      fetchForecastData();
+      fetchSeverityData();
+      fetchCountOverTimeData();
+      fetchDonutData();
+      fetchRiskRadarData();
+      fetchForecastTrendsData();
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (loadedCount === 6) {  // 6 is the total number of fetch calls for charts
+      setChartsLoading(false);
+    }
+  }, [loadedCount]);
+
 
   return (
     <>
@@ -79,6 +157,19 @@ const Predictions = ({ setPage }) => {
             "trend trend"
           `
         }}>
+          {chartsLoading
+            ? <div style={{
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                pointerEvents: 'none'    // ← let all mouse/wheel events pass through
+              }}>
+                <FireLoader />
+              </div>
+            : (
+          <>
           {/* 🔥 Forecast Map (Like CaliforniaFireMap) */}
           <div style={{
             gridArea: 'map',
@@ -90,7 +181,7 @@ const Predictions = ({ setPage }) => {
             justifyContent: 'center',
             gap: '0'
           }}>
-            <ForecastMap />
+            <ForecastMap data={forecastData} />
           </div>
 
           {/* 📊 Severity Gauge and Count Over Time (Like Incidents + Fires) */}
@@ -103,7 +194,7 @@ const Predictions = ({ setPage }) => {
               height: '300px',
               width: '100%'
             }}>
-              <SeverityGauge />
+              <SeverityGauge data={severityData}/>
             </div>
             <div style={{
               backgroundColor: '#111',
@@ -112,7 +203,7 @@ const Predictions = ({ setPage }) => {
               height: '240px',
               width: '100%'
             }}>
-              <CountOverTime />
+              <CountOverTime data={countOverTimeData} />
             </div>
           </div>
 
@@ -132,7 +223,7 @@ const Predictions = ({ setPage }) => {
               height: '200px',
               width: '100%'
             }}>
-              <IntensityDonut />
+              <IntensityDonut data={donutData} />
             </div>
             <div style={{
               backgroundColor: '#111',
@@ -142,7 +233,7 @@ const Predictions = ({ setPage }) => {
               width: '100%',
               marginLeft: '-1.4rem'
             }}>
-              <RiskRadar />
+              <RiskRadar data={riskRadarData}/>
             </div>
           </div>
 
@@ -157,8 +248,11 @@ const Predictions = ({ setPage }) => {
             flexDirection: 'column',
             height: '220px'
           }}>
-            <ForecastTrends />
+            <ForecastTrends data={forecastTrendsData} />
           </div>
+          </>
+            )
+          }
         </div>
 
         {/* 📌 Right Sidebar - Insights */}

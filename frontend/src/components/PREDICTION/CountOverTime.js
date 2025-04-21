@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -11,27 +11,7 @@ import {
   Label
 } from 'recharts';
 
-const CountOverTime = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch('/api/prediction/count');
-        const data = await res.json();
-        setData(data);
-      } catch (err) {
-        console.error('Failed to load prediction count data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+const CountOverTime = ({ data }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -53,25 +33,22 @@ const CountOverTime = () => {
     return null;
   };
 
-  const renderLegend = (props) => {
-    const { payload } = props;
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px', color: '#ccc' }}>
-        {payload.map((entry, index) => (
-          <div key={`legend-${index}`} style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-            <div style={{
-              width: '12px',
-              height: '12px',
-              backgroundColor: entry.color,
-              marginRight: '5px',
-              borderRadius: '50%'
-            }} />
-            <span>Predicted Fire Incidents</span>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const renderLegend = ({ payload }) => (
+    <div style={{ display: 'flex', justifyContent: 'center', padding: '10px', color: '#ccc' }}>
+      {payload.map((entry, index) => (
+        <div key={`legend-${index}`} style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            backgroundColor: entry.color,
+            marginRight: '5px',
+            borderRadius: '50%'
+          }} />
+          <span>Predicted Fire Incidents</span>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div style={{
@@ -81,37 +58,11 @@ const CountOverTime = () => {
       borderRadius: '8px',
       padding: '1rem',
       color: '#ffcc80',
-      marginTop: '2rem' 
+      marginTop: '2rem'
     }}>
       <h4>Predicted Fire Count Over Time</h4>
       <div style={{ height: '250px', backgroundColor: 'transparent', padding: '0.5rem' }}>
-        {loading ? (
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-            color: '#aaa',
-            flexDirection: 'column'
-          }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              border: '3px solid #444',
-              borderTop: '3px solid #ff5722',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-              marginBottom: '10px'
-            }} />
-            <p>Loading data...</p>
-            <style>{`
-              @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-              }
-            `}</style>
-          </div>
-        ) : data.length === 0 ? (
+        {data.length === 0 ? (
           <div style={{
             display: 'flex',
             justifyContent: 'center',
