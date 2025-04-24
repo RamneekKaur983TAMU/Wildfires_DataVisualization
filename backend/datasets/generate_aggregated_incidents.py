@@ -32,4 +32,4 @@ agg.rename(columns={'Start Year': 'Year'}, inplace=True)
 # Save the result
 agg.to_csv('aggregated_incidents-2.csv', index=False)
 
-print("✅ Saved 'aggregated_incidents.csv' with County, Year, IncidentCount, Latitude, and Longitude.")
+print("Saved 'aggregated_incidents.csv' with County, Year, IncidentCount, Latitude, and Longitude.")

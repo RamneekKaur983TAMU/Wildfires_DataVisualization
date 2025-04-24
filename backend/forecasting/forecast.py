@@ -15,7 +15,7 @@ for county in df['County'].unique():
 
     if len(y) >= 1:
         try:
-            # print(f"\n📍 Forecasting {county} using moving average on data: {list(zip(years, y))}")
+            # print(f"\nForecasting {county} using moving average on data: {list(zip(years, y))}")
 
             # Use last 3 values or all available if fewer
             window = 3
@@ -24,7 +24,7 @@ for county in df['County'].unique():
             forecast = sum(y_recent) / len(y_recent)
             predicted = max(int(round(forecast)), 0)
 
-            # print(f"✅ Predicted for {county} using moving average: {predicted} incidents")
+            # print(f"Predicted for {county} using moving average: {predicted} incidents")
 
             latest_row = county_df.iloc[-1]
             predictions.append({
@@ -34,7 +34,7 @@ for county in df['County'].unique():
                 'predicted_incidents': predicted
             })
         except Exception as e:
-            print(f"❌ Error predicting {county}: {e}")
+            print(f"Error predicting {county}: {e}")
 
 # Top 5 counties with highest predicted incidents
 top5 = sorted(predictions, key=lambda x: x['predicted_incidents'], reverse=True)[:5]
@@ -56,4 +56,4 @@ out_path = os.path.join("./datasets/forecast_output.json")
 with open(out_path, "w") as f:
     json.dump(output, f, indent=2)
 
-print("\n✅ Forecast generated and saved to forecast_output.json")
+print("\nForecast generated and saved to forecast_output.json")
