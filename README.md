@@ -1,6 +1,8 @@
 
 # 🔥 Wildfires Data Visualization Dashboard
 
+![Dashboard Preview](./frontend/src/components/images/header2.jpg)
+
 A full-stack web application for exploring, forecasting, and planning wildfire response across California. Built with React.js, Node.js, D3.js, and Chart.js, this tool transforms complex incident data into meaningful visual insights for both analysts and the public.
 
 ---
