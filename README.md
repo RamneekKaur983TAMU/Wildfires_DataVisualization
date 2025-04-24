@@ -5,18 +5,18 @@ A full-stack web application for exploring, forecasting, and planning wildfire r
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
-- **🗺️ Exploratory Data Analysis (EDA Tab)**  
+- ** Exploratory Data Analysis (EDA Tab)**  
   Interactive charts and maps to analyze historical wildfire trends by county, year, and damage type.
 
-- **📈 Prediction Tab**  
+- ** Prediction Tab**  
   Time-series forecasting of monthly incident counts, severity distribution visualizations, and hotspot projections.
 
-- **🚨 Decision Support Tab**  
+- ** Decision Support Tab**  
   Real-time map tools, evacuation checklists, and safety resources for landowners and responders.
 
-- **🧑‍💻 User-Centric Design**  
+- ** User-Centric Design**  
   Dark mode, responsive layout, colorblind-safe palettes, and easy navigation between tabs.
 
 ---
@@ -33,7 +33,15 @@ A full-stack web application for exploring, forecasting, and planning wildfire r
 
 ---
 
-## 🚀 Getting Started
+## 🔗 Key Links
+
+- [Project Survey (Google Form)](https://docs.google.com/forms/d/e/1FAIpQLSduARsKZC8DOXMLMi8ffVa16p6f89Ks97iOWLmyyT95iHnZXQ/viewform)
+- [Wildfire Dataset Source](https://data.cnra.ca.gov/dataset/california-historical-fire-perimeters)
+- [Demo Video on YouTube](https://www.youtube.com/watch?v=lZwsGxrZhto)
+
+---
+
+## Getting Started
 
 ### 1. Clone the Repository
 
@@ -75,7 +83,7 @@ npm start
 
 ---
 
-## 🧪 Testing
+## Testing
 
 From `frontend/`:
 
@@ -87,7 +95,7 @@ Includes unit tests for key components using React Testing Library.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Wildfires_DataVisualization/
@@ -107,7 +115,7 @@ Wildfires_DataVisualization/
 
 ---
 
-## 📄 Environment Configuration
+## Environment Configuration
 
 If applicable, add a `.env` file for backend configuration:
 
@@ -119,7 +127,7 @@ Example: `.env.example` is included for reference.
 
 ---
 
-## 💡 Innovation & Technical Depth
+## Innovation & Technical Depth
 
 - Forecasting is powered by time-series models (e.g., ARIMAX, Prophet-ready).
 - GeoJSON map overlays provide spatial context for projected and historical fires.
@@ -128,7 +136,7 @@ Example: `.env.example` is included for reference.
 
 ---
 
-## 🧠 Learn More
+## Learn More
 
 - [React Docs](https://reactjs.org/)
 - [D3.js Guide](https://d3js.org/)
@@ -137,7 +145,7 @@ Example: `.env.example` is included for reference.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Pull requests are welcome! Please fork the repo and submit a PR with clear commit messages.
 
