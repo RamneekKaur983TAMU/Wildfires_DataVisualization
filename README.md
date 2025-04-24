@@ -143,10 +143,4 @@ Pull requests are welcome! Please fork the repo and submit a PR with clear commi
 
 ---
 
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 **🔥 Built for innovation. Designed for impact. Empowering wildfire response through data.**
