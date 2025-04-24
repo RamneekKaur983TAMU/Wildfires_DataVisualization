@@ -1,71 +1,152 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 🔥 Wildfires Data Visualization Dashboard
 
-## Available Scripts
+A full-stack web application for exploring, forecasting, and planning wildfire response across California. Built with React.js, Node.js, D3.js, and Chart.js, this tool transforms complex incident data into meaningful visual insights for both analysts and the public.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🌟 Key Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **🗺️ Exploratory Data Analysis (EDA Tab)**  
+  Interactive charts and maps to analyze historical wildfire trends by county, year, and damage type.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **📈 Prediction Tab**  
+  Time-series forecasting of monthly incident counts, severity distribution visualizations, and hotspot projections.
 
-### `npm test`
+- **🚨 Decision Support Tab**  
+  Real-time map tools, evacuation checklists, and safety resources for landowners and responders.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **🧑‍💻 User-Centric Design**  
+  Dark mode, responsive layout, colorblind-safe palettes, and easy navigation between tabs.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛠 Tech Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Layer         | Technology                |
+| ------------- | ------------------------- |
+| Frontend      | React.js, Chart.js, D3.js |
+| Backend       | Node.js, Express.js       |
+| Data          | CSV, GeoJSON              |
+| Visual Tools  | Line charts, heatmaps, KPIs, radar charts |
+| Hosting       | Ready for deployment      |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 🚀 Getting Started
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 1. Clone the Repository
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+git clone https://github.com/yourusername/Wildfires_DataVisualization.git
+cd Wildfires_DataVisualization
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 2. Install Dependencies
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+# Frontend
+cd frontend
+npm install
 
-## Learn More
+# Backend
+cd ../backend
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 3. Run the Backend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+For large datasets, increase memory allocation:
 
-### Code Splitting
+```bash
+node --max-old-space-size=4096 index.js
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+> Runs on: `http://localhost:5000`
 
-### Analyzing the Bundle Size
+### 4. Run the Frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+cd frontend
+npm start
+```
 
-### Making a Progressive Web App
+> Opens app at: `http://localhost:3000`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 🧪 Testing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+From `frontend/`:
 
-### Deployment
+```bash
+npm test
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Includes unit tests for key components using React Testing Library.
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# Wildfires_DataVisualization
+## 📁 Project Structure
+
+```
+Wildfires_DataVisualization/
+├── frontend/
+│   ├── components/        # Reusable UI elements (e.g. KPIGrid, FireMap)
+│   ├── pages/             # EDA, Prediction, Decision tabs
+│   ├── api/               # API calls
+│   ├── utils/             # Helper functions
+│   ├── App.js             # Routing logic
+│   └── index.js           # App entry point
+├── backend/
+│   ├── routes/            # API endpoints
+│   ├── controllers/       # Logic for each route
+│   ├── data/              # Static datasets (CSV, GeoJSON)
+│   └── index.js           # Server entry point
+```
+
+---
+
+## 📄 Environment Configuration
+
+If applicable, add a `.env` file for backend configuration:
+
+```bash
+PORT=5000
+```
+
+Example: `.env.example` is included for reference.
+
+---
+
+## 💡 Innovation & Technical Depth
+
+- Forecasting is powered by time-series models (e.g., ARIMAX, Prophet-ready).
+- GeoJSON map overlays provide spatial context for projected and historical fires.
+- Combines multiple libraries (D3, Chart.js) for layered visual richness.
+- Scalable memory support via `--max-old-space-size` flag.
+
+---
+
+## 🧠 Learn More
+
+- [React Docs](https://reactjs.org/)
+- [D3.js Guide](https://d3js.org/)
+- [Node.js Docs](https://nodejs.org/)
+- [Create React App Guide](https://create-react-app.dev/)
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome! Please fork the repo and submit a PR with clear commit messages.
+
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+**🔥 Built for innovation. Designed for impact. Empowering wildfire response through data.**
