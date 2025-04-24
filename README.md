@@ -3,7 +3,7 @@
 
 ![Dashboard Preview](./frontend/src/components/images/header2.jpg)
 
-A full-stack web application for exploring, forecasting, and planning wildfire response across California. Built with React.js, Node.js, D3.js, and Chart.js, this tool transforms complex incident data into meaningful visual insights for both analysts and the public.
+A full-stack web application for exploring, forecasting, and planning wildfire response across California. Built with React.js, Node.js, this tool transforms complex incident data into meaningful visual insights for both analysts and the public.
 
 ---
 
@@ -131,7 +131,7 @@ Example: `.env.example` is included for reference.
 
 ## Innovation & Technical Depth
 
-- Forecasting is powered by time-series models (e.g., ARIMAX, Prophet-ready).
+- Forecasting is powered by time-series models (e.g., ARIMAX, WMA and Linear regressions etc).
 - GeoJSON map overlays provide spatial context for projected and historical fires.
 - Combines multiple libraries (D3, Chart.js) for layered visual richness.
 - Scalable memory support via `--max-old-space-size` flag.
